@@ -1,0 +1,45 @@
+{
+  "name": "lonfirejs",
+  "version": "0.0.1",
+  "description": "Lonefire.js - Backend REST API",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.0.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "express-session": "^1.16.2",
+    "express-validator": "^6.1.1",
+    "mongoose": "^5.6.9",
+    "passport": "^0.4.0",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "apidoc": "^0.17.7",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-flowtype": "^4.2.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "jsdoc": "^3.6.3",
+    "nodemon": "^1.19.1",
+    "prettier": "^1.18.2"
+  },
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "NODE_ENV=development nodemon -r esm app.js",
+    "prod": "NODE_ENV=production node -r esm app.js",
+    "test": "jest test.js",
+    "lint": "eslint --fix . && echo 'Lint complete.'",
+    "debug": "node -r esm --inspect app.js",
+    "doc": "node doc.js"
+  },
+  "author": "llldar",
+  "license": "MIT"
+}
