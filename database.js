@@ -2,7 +2,7 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 import getLogger from './util/logger';
 
-const logger = getLogger('database');
+const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
 const mongooseOptions = {
   keepAlive: 300000,

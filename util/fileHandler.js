@@ -3,7 +3,7 @@ import { promises as fsPromises } from 'fs';
 import { join } from 'path';
 import getLogger from './logger';
 
-const logger = getLogger('fileHandler');
+const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
 const listDir = async path => {
   try {

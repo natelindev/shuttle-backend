@@ -4,6 +4,7 @@ import { param } from 'express-validator';
 import Article from './model';
 import validate from '../../util/apiValidator';
 import authorize from '../../util/permisson';
+import consts from '../../util/consts';
 import asyncHandler from '../../util/errorHandler';
 
 const router = express.Router();

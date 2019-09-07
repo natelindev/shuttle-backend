@@ -1,6 +1,5 @@
-const mongoose = require('mongoose');
-
-const { Schema } = mongoose;
+import { model, Schema } from 'mongoose';
+import { composeWithMongoose } from 'graphql-compose-mongoose/node8';
 
 const tagSchema = new Schema(
   {
@@ -14,4 +13,8 @@ const tagSchema = new Schema(
   { collection: 'Tags' }
 );
 
-module.exports = mongoose.model('Tag', tagSchema);
+const Tag = model('Tag', tagSchema);
+const typeComposer = composeWithMongoose(Tag, {});
+
+export { typeComposer };
+export default Tag;

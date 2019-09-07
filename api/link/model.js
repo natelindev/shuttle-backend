@@ -1,4 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
+import { composeWithMongoose } from 'graphql-compose-mongoose/node8';
 
 const linkSchema = new Schema(
   {
@@ -17,4 +18,8 @@ const linkSchema = new Schema(
   { collection: 'Links' }
 );
 
-export default mongoose.model('Link', linkSchema);
+const Link = model('Link', linkSchema);
+const typeComposer = composeWithMongoose(Link, {});
+
+export { typeComposer };
+export default Link;

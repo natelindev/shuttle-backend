@@ -4,13 +4,11 @@
 
 Built with `Express`, `Node.JS`
 
-Doc by `apiDoc`
-
 #### Setup
 
 Install latest `Node.js` from [here](https://nodejs.org/en/download/)
 
-Install latest `MongoDB` from here
+Install latest `MongoDB` from [here](https://www.mongodb.com/download-center/community)
 
 Start the `MongoDB` using command
 
@@ -26,7 +24,7 @@ vi /etc/systemd/system/mongo.service
 
 Then enter the following:
 
-```toml
+```plaintext
 [Unit]
 Description=Mongo DB
 After=network.target
@@ -48,7 +46,7 @@ you can change it to whatever port you prefer
 ```javascript
 PORT=8080;
 DOC_PORT=3000;
-MONGODB_CONNECT_STRING='mongodb://127.0.0.1/LonefireJs';
+MONGODB_CONNECT_STRING='mongodb://127.0.0.1/lonefireJs';
 ```
 
 Install the dependencies using:
@@ -59,16 +57,10 @@ npm install
 
 #### Run
 
-Enter the project directory and 
+Enter the project directory and
 
 ```shell
 npm start
-```
-
-#### View Documentation
-
-```bash
-npm run doc
 ```
 
 #### Lint
@@ -83,7 +75,7 @@ if you are using `Visual Studio Code`
 
 Go to `Settings-> Debug: Node: Auto Attach`, Set it to be `On`
 
-And then 
+And then
 
 ```bash
 npm run debug

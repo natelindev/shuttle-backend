@@ -1,6 +1,5 @@
-const mongoose = require('mongoose');
-
-const { Schema } = mongoose;
+import { model, Schema } from 'mongoose';
+import { composeWithMongoose } from 'graphql-compose-mongoose/node8';
 
 const commentSchema = new Schema(
   {
@@ -20,4 +19,8 @@ const commentSchema = new Schema(
   { collection: 'Comments' }
 );
 
-module.exports = mongoose.model('Comment', commentSchema);
+const Comment = model('Comment', commentSchema);
+const typeComposer = composeWithMongoose(Comment, {});
+
+export { typeComposer };
+export default Comment;

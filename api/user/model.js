@@ -1,4 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
+import { composeWithMongoose } from 'graphql-compose-mongoose/node8';
 import consts from '../../util/consts';
 
 const userSchema = new Schema(
@@ -32,4 +33,8 @@ const userSchema = new Schema(
   { collection: 'Users' }
 );
 
-module.exports = mongoose.model('User', userSchema);
+const User = model('User', userSchema);
+const typeComposer = composeWithMongoose(User, {});
+
+export { typeComposer };
+export default User;

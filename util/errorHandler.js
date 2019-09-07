@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import getLogger from './logger';
 
-const logger = getLogger('errorHandler');
+const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
 const asyncHandler = fn => async (req, res, next) => {
   try {

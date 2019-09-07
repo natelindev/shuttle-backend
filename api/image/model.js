@@ -1,6 +1,5 @@
-const mongoose = require('mongoose');
-
-const { Schema } = mongoose;
+import { model, Schema } from 'mongoose';
+import { composeWithMongoose } from 'graphql-compose-mongoose/node8';
 
 const imageSchema = new Schema(
   {
@@ -19,4 +18,8 @@ const imageSchema = new Schema(
   { collection: 'Images' }
 );
 
-module.exports = mongoose.model('Image', imageSchema);
+const Image = model('Image', imageSchema);
+const typeComposer = composeWithMongoose(Image, {});
+
+export { typeComposer };
+export default Image;

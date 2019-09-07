@@ -3,7 +3,7 @@ import getLogger from './logger';
 import asyncHandler from './errorHandler';
 import getApiList from './apiRegister';
 
-const logger = getLogger('permisson');
+const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
 export default roles =>
   asyncHandler(async (req, res, next) => {
@@ -30,16 +30,15 @@ export default roles =>
         // dynamic import of the Item
         const apiList = getApiList();
         if (itemType && itemId && apiList.includes(itemType)) {
-          try{
+          try {
             const Item = await import(`../api/${itemType}/model`);
             const item = await Item.default.findOne({ _id: itemId });
             if (item.author === req.session.user._id) {
               next();
             }
-          }catch(err){
+          } catch (err) {
             logger.error(err);
           }
-          
         } else {
           logger.warning(
             `Unkown item type ${itemType} when checking ownership.`

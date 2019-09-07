@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import mongoose from 'mongoose';
-import { body, param } from 'express-validator';
+import { param } from 'express-validator';
 import Item from './model';
 import consts from '../../util/consts';
 import validate from '../../util/apiValidator';
@@ -59,7 +59,6 @@ router.post(
  */
 router.put(
   '/item',
-  validate([body('name').isString()]),
   authorize([consts.roles.admin]),
   asyncHandler(async (req, res) => {
     const items = req.body;

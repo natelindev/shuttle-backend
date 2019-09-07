@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { composeWithMongoose } from 'graphql-compose-mongoose/node8';
 
 const articleSchema = new Schema(
   {
@@ -28,4 +29,8 @@ const articleSchema = new Schema(
   { collection: 'Articles' }
 );
 
-export default model('Article', articleSchema);
+const Article = model('Article', articleSchema);
+const typeComposer = composeWithMongoose(Article, {});
+
+export { typeComposer };
+export default Article;
