@@ -1,7 +1,7 @@
 import consts from './consts';
 import getLogger from './logger';
 import asyncHandler from './errorHandler';
-import getApiList from './apiRegister';
+import getModelList from './modelScanner';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
@@ -28,10 +28,10 @@ export default roles =>
           }
         });
         // dynamic import of the Item
-        const apiList = getApiList();
-        if (itemType && itemId && apiList.includes(itemType)) {
+        const modelList = getModelList();
+        if (itemType && itemId && modelList.includes(itemType)) {
           try {
-            const Item = await import(`../api/${itemType}/model`);
+            const Item = await import(`${consts.paths.model}${itemType}`);
             const item = await Item.default.findOne({ _id: itemId });
             if (item.author === req.session.user._id) {
               next();

@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { composeWithMongoose } from 'graphql-compose-mongoose/node8';
-import consts from '../../util/consts';
+import consts from '../util/consts';
 
 const userSchema = new Schema(
   {

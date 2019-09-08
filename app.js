@@ -6,35 +6,31 @@ import graphqlHTTP from 'express-graphql';
 import getLogger from './util/logger';
 import apiLogger from './util/apiLogger';
 import db from './database';
-import importHandler from './util/importHandler';
-import getApiList from './util/apiRegister';
-import getGraphQLSchema from './util/graphqlHandler';
+import getGraphQLSchema from './api/graphql';
+import getRestRouters from './api/rest';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 const app = express();
 
-// Api Logger
+// Api logger
 app.use(apiLogger);
 
-// Error Handling
+// Application wide error handling
 app.use((req, res, next, err) => {
   logger.error(err);
 });
 
+// Body parser
 app.use(urlencoded({ extended: false }));
 app.use(json());
 app.disable('x-powered-by');
 
-// Import and Mount routers
+// Enable REST
 (async () => {
-  const apiList = await getApiList();
-  const routerPaths = apiList.map(api => `../api/${api}/router`);
-  let routers = importHandler.importMany(routerPaths);
-
-  if (routers && routers.length > 0) {
-    routers = routers.filter(router => router !== null);
-    routers.forEach(router => {
-      app.use('/api', router);
+  const restRouters = await getRestRouters();
+  if (restRouters && restRouters.length > 0) {
+    restRouters.forEach(router => {
+      app.use('/rest', router);
     });
   }
 })();
@@ -51,8 +47,10 @@ app.disable('x-powered-by');
   );
 })();
 
-// Database
-db.connect();
+// Index page message
+app.get('/', (req, res) => {
+  res.send('Lonefire Js REST/GraphQL API Server');
+});
 
 // Session
 app.use(
@@ -63,13 +61,16 @@ app.use(
   })
 );
 
+// Database
+db.connect();
+
 // Listen
 app
   .listen(process.env.PORT || 8000)
   .on('listening', () => {
     logger.info(
-      `Lonefire Js REST API Server is listening on port ${process.env.PORT ||
-      8000}`
+      `Lonefire Js REST/GraphQL API Server is listening on port ${process.env
+        .PORT || 8000}`
     );
   })
   .on('error', err => {
