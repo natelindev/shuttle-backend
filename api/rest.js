@@ -1,8 +1,9 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import passport from 'passport';
 import { param } from 'express-validator';
 import validate from '../util/apiValidator';
-import authorize from '../util/permisson';
+import authorize from '../util/authorize';
 import consts from '../util/consts';
 import getLogger from '../util/logger';
 import importHandler from '../util/importHandler';
@@ -38,6 +39,7 @@ const getRestRouters = async () => {
               })
             )
             .post(
+              passport.authenticate('jwt', { session: false }),
               authorize(consts.roles.user),
               asyncHandler(async (req, res) => {
                 const model = await new Model(req.body).save();
@@ -45,6 +47,7 @@ const getRestRouters = async () => {
               })
             )
             .put(
+              passport.authenticate('jwt', { session: false }),
               authorize(consts.roles.admin),
               asyncHandler(async (req, res) => {
                 const allModels = req.body;
@@ -60,6 +63,7 @@ const getRestRouters = async () => {
               })
             )
             .delete(
+              passport.authenticate('jwt', { session: false }),
               authorize(consts.roles.admin),
               asyncHandler(async (req, res) => {
                 await Model.deleteMany({});
@@ -89,6 +93,7 @@ const getRestRouters = async () => {
               })
             )
             .put(
+              passport.authenticate('jwt', { session: false }),
               authorize(consts.roles.owner),
               asyncHandler(async (req, res) => {
                 const model = await Model.findByIdAndUpdate(
@@ -100,6 +105,7 @@ const getRestRouters = async () => {
               })
             )
             .patch(
+              passport.authenticate('jwt', { session: false }),
               authorize(consts.roles.owner),
               asyncHandler(async (req, res) => {
                 const model = await Model.findByIdAndUpdate(
@@ -113,6 +119,7 @@ const getRestRouters = async () => {
               })
             )
             .delete(
+              passport.authenticate('jwt', { session: false }),
               authorize(consts.roles.owner),
               asyncHandler(async (req, res) => {
                 await Model.findByIdAndRemove(req.params[`${modelName}Id`]);

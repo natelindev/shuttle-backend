@@ -6,6 +6,8 @@ const userSchema = new Schema(
   {
     username: {
       required: true,
+      index: true,
+      unique: true,
       type: String
     },
     nickname: {
@@ -21,8 +23,7 @@ const userSchema = new Schema(
     },
     hashedPassword: {
       required: true,
-      type: String,
-      select: false
+      type: String
     },
     lastLogin: {
       type: Date

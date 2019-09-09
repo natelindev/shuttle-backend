@@ -1,16 +1,23 @@
 import express from 'express';
 import { urlencoded, json } from 'body-parser';
+import cookieParser from 'cookie-parser';
 import 'dotenv/config';
-import expressSession from 'express-session';
 import graphqlHTTP from 'express-graphql';
+import passport from 'passport';
 import getLogger from './util/logger';
 import apiLogger from './util/apiLogger';
 import db from './database';
 import getGraphQLSchema from './api/graphql';
 import getRestRouters from './api/rest';
+import initPassport from './util/passport';
+import authenticate from './util/authenticate';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 const app = express();
+
+// passport
+initPassport(passport);
+app.use(passport.initialize());
 
 // Api logger
 app.use(apiLogger);
@@ -20,8 +27,9 @@ app.use((req, res, next, err) => {
   logger.error(err);
 });
 
-// Body parser
+// Setup express
 app.use(urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(json());
 app.disable('x-powered-by');
 
@@ -52,15 +60,8 @@ app.get('/', (req, res) => {
   res.send('Lonefire Js REST/GraphQL API Server');
 });
 
-// Session
-app.use(
-  expressSession({
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: true
-  })
-);
-
+// User authentication
+app.use(authenticate);
 // Database
 db.connect();
 
