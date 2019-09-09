@@ -76,7 +76,7 @@ router.post(
 
         logger.debug(`Generated jwt toke: ${token}`);
         // store Jwt token in cookie */
-        res.cookie('jwt', token, { httpOnly: true, secure: true });
+        res.cookie('jwt', token, { httpOnly: true });
         return res.status(200).send('login successful');
       });
 
@@ -88,7 +88,7 @@ router.post(
 
 router.get('/logout', (req, res) => {
   req.logout();
-  res.clearCookie('jwt', { httpOnly: true, secure: true });
+  res.clearCookie('jwt', { httpOnly: true });
   if (req.user) {
     logger.debug(`User ${req.user.username} logged out`);
   }

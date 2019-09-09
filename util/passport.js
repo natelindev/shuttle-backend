@@ -1,4 +1,4 @@
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { Strategy as JwtStrategy } from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcrypt';
 import User from '../model/user';
@@ -18,7 +18,6 @@ export default passport => {
       },
       (jwtPayload, done) => {
         logger.info('jwt auth begin');
-        logger.info(jwtPayload);
         if (Date.now() > jwtPayload.expires) {
           return done('jwt expired');
         }

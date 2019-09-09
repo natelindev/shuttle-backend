@@ -41,8 +41,8 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "NODE_ENV=development nodemon -r esm app.js",
-    "prod": "NODE_ENV=production node -r esm app.js",
+    "dev": "nodemon -r esm app.js",
+    "prod": "node -r esm app.js",
     "test": "jest test.js",
     "lint": "eslint --fix . && echo 'Lint complete.'",
     "debug": "node -r esm --inspect app.js"

@@ -42,6 +42,10 @@ const getRestRouters = async () => {
               passport.authenticate('jwt', { session: false }),
               authorize(consts.roles.user),
               asyncHandler(async (req, res) => {
+                if (req.user.role !== consts.roles.admin) {
+                  // only admin can change ownership
+                  req.body.author = req.user.id;
+                }
                 const model = await new Model(req.body).save();
                 res.status(201).send({ Location: `${req.url}/${model._id}` });
               })
@@ -96,6 +100,10 @@ const getRestRouters = async () => {
               passport.authenticate('jwt', { session: false }),
               authorize(consts.roles.owner),
               asyncHandler(async (req, res) => {
+                if (req.user.role !== consts.roles.admin) {
+                  // only admin can change ownership
+                  req.body.author = req.user.id;
+                }
                 const model = await Model.findByIdAndUpdate(
                   req.params[`${modelName}Id`],
                   req.body
@@ -108,6 +116,14 @@ const getRestRouters = async () => {
               passport.authenticate('jwt', { session: false }),
               authorize(consts.roles.owner),
               asyncHandler(async (req, res) => {
+                if (req.user.role !== consts.roles.admin) {
+                  // only admin can change ownership
+                  if (
+                    Object.prototype.hasOwnProperty.call(req.body, 'author')
+                  ) {
+                    delete req.body.author;
+                  }
+                }
                 const model = await Model.findByIdAndUpdate(
                   req.params[`${modelName}Id`],
                   {

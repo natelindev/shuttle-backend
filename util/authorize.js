@@ -1,26 +1,32 @@
-import passport from 'passport';
 import consts from './consts';
 import getLogger from './logger';
 import asyncHandler from './errorHandler';
 import getModelList from './modelScanner';
+import importHandler from './importHandler';
+import User from '../model/user';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
-export default roles =>
+export default requriedRole =>
   asyncHandler(async (req, res, next) => {
     logger.info('custom auth begin');
+    logger.info(`requried role ${requriedRole}`);
     let statusCode = 403;
-    logger.info(req.user);
-    if (!roles || roles.length < 1 || roles.includes(consts.roles.user)) {
-      // user level authorize
-      if (req && req.user) {
+    let authorized = false;
+
+    const authUser = await User.findOne({ username: req.user.username });
+
+    if (authUser) {
+      // setup user for next middleware use
+      req.user.id = authUser._id;
+      req.user.role = authUser.role;
+
+      if (requriedRole === consts.roles.user) {
         next();
+        authorized = true;
       }
-      statusCode = 401;
-    }
-    if (roles && roles.includes(consts.roles.owner)) {
-      // owner level authorize
-      if (req.user) {
+
+      if (requriedRole === consts.roles.owner) {
         // get item type
         const itemType = Object.keys(req.params)
           .find(key => key.includes('Id'))
@@ -30,11 +36,14 @@ export default roles =>
         const modelList = await getModelList();
         if (itemType && itemId && modelList.includes(itemType)) {
           try {
-            const Item = await import(`${consts.paths.model}${itemType}`);
-            const item = await Item.default.findOne({ _id: itemId });
+            const Item = await importHandler.importOne(
+              `${consts.paths.model}${itemType}`
+            );
+            const item = await Item.findOne({ _id: itemId });
             // if it does not have auhtor field, user should not have access to it.
-            if (item.author && item.author === req.user._id) {
+            if (item.author && item.author.equals(authUser._id)) {
               next();
+              authorized = true;
             }
           } catch (err) {
             logger.error(err);
@@ -45,10 +54,19 @@ export default roles =>
           );
         }
       }
+
+      // admin will always have access
+      if (authUser.role === consts.roles.admin) {
+        next();
+        authorized = true;
+      }
+    } else {
+      statusCode = 401;
     }
-    // admin will always have priviledge
-    if (req && req.user && req.user.roles === consts.roles.admin) {
-      next();
+
+    if (!authorized) {
+      res
+        .status(statusCode)
+        .send(statusCode === 401 ? 'Unauthorized' : 'Forbidden');
     }
-    res.status(statusCode);
   });
