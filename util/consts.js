@@ -1,11 +1,18 @@
 export default {
-  roles: {
+  role: {
     admin: 'admin',
-    owner: 'owner',
+    groupOwner: 'groupOwner',
     user: 'user'
   },
+  access: {
+    public: 'public',
+    everyone: 'everyone',
+    group: 'group',
+    private: 'private'
+  },
   paths: {
-    model: '../model/'
+    model: '../models/',
+    image: '../images/'
   },
   options: {
     files: 1,

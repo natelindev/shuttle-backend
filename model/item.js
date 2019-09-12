@@ -7,13 +7,11 @@ const itemSchema = new Schema(
       required: true
     },
     description: {
+      type: String
+    },
+    schema: {
       type: String,
       required: true
-    },
-    quantity: {
-      type: Number,
-      required: true,
-      default: 1
     }
   },
   { timestamps: true },

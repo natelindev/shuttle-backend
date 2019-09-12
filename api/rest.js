@@ -1,6 +1,5 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import passport from 'passport';
 import { param } from 'express-validator';
 import validate from '../util/apiValidator';
 import authorize from '../util/authorize';
@@ -29,6 +28,7 @@ const getRestRouters = async () => {
           router
             .route(`/${modelName}`)
             .get(
+              authorize(consts.access.public),
               asyncHandler(async (req, res) => {
                 const allModels = await Model.find({});
                 if (allModels) {
@@ -39,8 +39,7 @@ const getRestRouters = async () => {
               })
             )
             .post(
-              passport.authenticate('jwt', { session: false }),
-              authorize(consts.roles.user),
+              authorize(consts.access.everyone),
               asyncHandler(async (req, res) => {
                 if (req.user.role !== consts.roles.admin) {
                   // only admin can change ownership
@@ -51,8 +50,7 @@ const getRestRouters = async () => {
               })
             )
             .put(
-              passport.authenticate('jwt', { session: false }),
-              authorize(consts.roles.admin),
+              authorize(consts.access.group),
               asyncHandler(async (req, res) => {
                 const allModels = req.body;
                 const bulkOperation = Model.collection.initializeUnorderedBulkOp();
@@ -67,8 +65,7 @@ const getRestRouters = async () => {
               })
             )
             .delete(
-              passport.authenticate('jwt', { session: false }),
-              authorize(consts.roles.admin),
+              authorize(consts.access.group),
               asyncHandler(async (req, res) => {
                 await Model.deleteMany({});
                 res.status(204).end();
@@ -85,6 +82,7 @@ const getRestRouters = async () => {
               ])
             )
             .get(
+              authorize(consts.access.public),
               asyncHandler(async (req, res) => {
                 const model = await Model.findOne({
                   _id: req.params[`${modelName}Id`]
@@ -97,8 +95,7 @@ const getRestRouters = async () => {
               })
             )
             .put(
-              passport.authenticate('jwt', { session: false }),
-              authorize(consts.roles.owner),
+              authorize(consts.access.group),
               asyncHandler(async (req, res) => {
                 if (req.user.role !== consts.roles.admin) {
                   // only admin can change ownership
@@ -113,15 +110,12 @@ const getRestRouters = async () => {
               })
             )
             .patch(
-              passport.authenticate('jwt', { session: false }),
-              authorize(consts.roles.owner),
+              authorize(consts.access.group),
               asyncHandler(async (req, res) => {
                 if (req.user.role !== consts.roles.admin) {
                   // only admin can change ownership
-                  if (
-                    Object.prototype.hasOwnProperty.call(req.body, 'author')
-                  ) {
-                    delete req.body.author;
+                  if (Object.prototype.hasOwnProperty.call(req.body, 'owner')) {
+                    delete req.body.owner;
                   }
                 }
                 const model = await Model.findByIdAndUpdate(
@@ -135,8 +129,7 @@ const getRestRouters = async () => {
               })
             )
             .delete(
-              passport.authenticate('jwt', { session: false }),
-              authorize(consts.roles.owner),
+              authorize(consts.access.group),
               asyncHandler(async (req, res) => {
                 await Model.findByIdAndRemove(req.params[`${modelName}Id`]);
                 res.status(204).end();

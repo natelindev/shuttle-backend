@@ -19,7 +19,7 @@ const userSchema = new Schema(
     role: {
       required: true,
       type: String,
-      enum: [consts.roles.admin, consts.roles.user]
+      enum: [consts.roles.admin, consts.roles.groupOwner, consts.roles.user]
     },
     hashedPassword: {
       required: true,
@@ -31,7 +31,7 @@ const userSchema = new Schema(
     avatar: { type: Schema.Types.ObjectId, ref: 'Image' }
   },
   { timestamps: true },
-  { collection: 'Users' }
+  { collection: 'users' }
 );
 
 const User = model('User', userSchema);
