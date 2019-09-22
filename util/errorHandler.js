@@ -3,30 +3,33 @@ import getLogger from './logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
-const asyncHandler = fn => async (req, res, next) => {
+const asyncHandler = fn => async (...args) => {
   try {
-    await fn(req, res, next);
+    await fn(...args);
   } catch (err) {
     logger.error(err);
-    let errors = {
-      message: 'Internal Sever Error',
-      error: err
-    };
-
-    if (err instanceof mongoose.Error.ValidationError) {
-      errors = {
-        message: 'Mongoose Model Validation Error',
+    const resFn = args.find(arg => arg.name === 'res');
+    if (resFn) {
+      let errors = {
+        message: 'Internal Sever Error',
         error: err
       };
-    }
-    if (err instanceof mongoose.mongo.MongoError) {
-      errors = {
-        message: 'MongDB Error',
-        error: err
-      };
-    }
 
-    res.status(500).json(errors);
+      if (err instanceof mongoose.Error.ValidationError) {
+        errors = {
+          message: 'Mongoose Model Validation Error',
+          error: err
+        };
+      }
+      if (err instanceof mongoose.mongo.MongoError) {
+        errors = {
+          message: 'MongDB Error',
+          error: err
+        };
+      }
+
+      resFn.status(500).json(errors);
+    }
   }
 };
 

@@ -10,13 +10,22 @@ export default {
     group: 'group',
     private: 'private'
   },
-  paths: {
-    model: '../models/',
-    image: '../images/'
+  path: {
+    model: 'model',
+    image: 'image'
   },
-  options: {
+  option: {
     files: 1,
     dirs: 2,
     all: 3
+  },
+  property: {
+    owner: 'owner',
+    access: 'access'
+  },
+  modelBuilder: {
+    // (ref.)type(:default)(!)
+    regex: /^(?<ref>[a-zA-Z]+\.)?((?<type>[a-zA-Z]+))(:(?<default>.+))?(?<required>!)?$/,
+    supportedTypes: ['String', 'Number', 'Date', 'Boolean', 'Id']
   }
 };

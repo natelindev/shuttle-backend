@@ -1,26 +1,11 @@
-import { model, Schema } from 'mongoose';
-import { composeWithMongoose } from 'graphql-compose-mongoose/node8';
+import consts from '../util/consts';
 
-const noteSchema = new Schema(
-  {
-    author: { type: Schema.Types.ObjectId, ref: 'User' },
-    content: {
-      type: String,
-      required: true
-    },
-    status: { type: Schema.Types.ObjectId, ref: 'Status' },
-    images: [{ type: Schema.Types.ObjectId, ref: 'Image' }],
-    likeCount: {
-      type: Number,
-      default: 0
-    }
-  },
-  { timestamps: { createdAt: 'createdOn', updatedAt: 'updatedOn' } },
-  { collection: 'Notes' }
-);
-
-const Note = model('Note', noteSchema);
-const typeComposer = composeWithMongoose(Note, {});
-
-export { typeComposer };
-export default Note;
+export default {
+  [consts.property.owner]: true,
+  title: 'String!',
+  content: 'String!',
+  tags: ['Tag.Id'],
+  status: 'Status.Id',
+  images: ['Image.Id'],
+  likeCount: 'Number:0'
+};

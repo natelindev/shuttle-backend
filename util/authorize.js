@@ -37,7 +37,7 @@ export default requriedRole =>
         if (itemType && itemId && modelList.includes(itemType)) {
           try {
             const Item = await importHandler.importOne(
-              `${consts.paths.model}${itemType}`
+              `../${consts.path.model}/${itemType}`
             );
             const item = await Item.findOne({ _id: itemId });
             // if it does not have auhtor field, user should not have access to it.

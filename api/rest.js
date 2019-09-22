@@ -5,9 +5,9 @@ import validate from '../util/apiValidator';
 import authorize from '../util/authorize';
 import consts from '../util/consts';
 import getLogger from '../util/logger';
-import importHandler from '../util/importHandler';
 import getModelList from '../util/modelScanner';
 import asyncHandler from '../util/errorHandler';
+import getModel from '../util/modelBuilder';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
@@ -16,13 +16,11 @@ const getRestRouters = async () => {
   try {
     // Import the models
     const modelList = await getModelList();
-    const modelPaths = modelList.map(model => `${consts.paths.model}${model}`);
     restRouters = await Promise.all(
-      modelPaths.map(async modelPath => {
-        const Model = await importHandler.importOne(modelPath);
+      modelList.map(async modelName => {
+        const Model = await getModel(modelName);
         let router = null;
         if (Model) {
-          const modelName = modelPath.substring(modelPath.lastIndexOf('/') + 1);
           router = express.Router();
 
           router
