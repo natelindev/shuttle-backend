@@ -1,7 +1,7 @@
 {
-  "name": "lonfirejs",
+  "name": "shuttle",
   "version": "0.0.2",
-  "description": "lonefire.js - Backend REST/GraphQL API",
+  "description": "shuttle.js - Backend REST/GraphQL API",
   "main": "app.js",
   "dependencies": {
     "bcrypt": "^3.0.6",
@@ -55,6 +55,6 @@
     "debug": "node -r esm --inspect app.js"
   },
   "author": "llldar",
-  "repository": "https://github.com/llldar/lonefirejs",
+  "repository": "https://github.com/llldar/shuttle.js",
   "license": "MIT"
 }

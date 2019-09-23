@@ -5,6 +5,9 @@ import dynamicModel from '../model/dynamicModel';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
+/**
+ * Scan the model path and return a list of models as string array
+ */
 const getModelList = async () => {
   try {
     // get the static list

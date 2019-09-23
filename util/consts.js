@@ -19,6 +19,11 @@ export default {
     dirs: 2,
     all: 3
   },
+  rngOption: {
+    decimal: 'decimal',
+    integer: 'integer',
+    string: 'string'
+  },
   property: {
     owner: 'owner',
     access: 'access'

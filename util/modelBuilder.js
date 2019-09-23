@@ -30,6 +30,12 @@ const evalueateProperty = value => {
     // find the according type
     schemaItem.type = Schema.Types[result.groups.type];
 
+    // ref can only be used on ObjectId
+    if (result.groups.ref && result.groups.type === 'ObjectId') {
+      schemaItem.ref = result.groups.ref;
+    } else if (result.groups.ref) {
+      logger.error(`Invalid ref on property ${result.groups.type} detected`);
+    }
     if (result.groups.required) {
       schemaItem.required = true;
     }

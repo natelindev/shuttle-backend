@@ -8,8 +8,10 @@ import getLogger from './logger';
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
 export default passport => {
-  // Jwt strategy
-  // Used to verify the user
+  /**
+   * Jwt strategy
+   * verify user identity after login
+   */
   passport.use(
     new JwtStrategy(
       {
@@ -26,8 +28,10 @@ export default passport => {
     )
   );
 
-  // Local Strategy
-  // Used to login
+  /**
+   * Local strategy
+   * classic username password auth
+   */
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
