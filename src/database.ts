@@ -4,19 +4,19 @@ import getLogger from './util/logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
-const mongooseOptions = {
-  keepAlive: 300000,
+const mongooseOptions: mongoose.ConnectionOptions = {
   connectTimeoutMS: 30000,
+  keepAlive: true,
   useNewUrlParser: true,
   useFindAndModify: false,
   useCreateIndex: true
 };
 
 export default {
-  connect() {
+  connect(): void {
     mongoose
       .connect(`${process.env.MONGODB_CONNECT_STRING}`, mongooseOptions)
       .then(() => logger.info('MongoDB connected'))
-      .catch(err => logger.error(err));
+      .catch((err: any) => logger.error(err));
   }
 };

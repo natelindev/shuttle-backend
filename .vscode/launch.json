@@ -4,13 +4,5 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        {
-            "type": "node",
-            "request": "attach",
-            "name": "Attach to remote",
-            "address": "43.239.159.101",
-            "port": 8080
-        }
-        
     ]
 }

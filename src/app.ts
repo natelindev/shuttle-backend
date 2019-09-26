@@ -23,7 +23,7 @@ app.use(passport.initialize());
 app.use(apiLogger);
 
 // Application wide error handling
-app.use((req, res, next, err) => {
+app.use((req: any, res: any, next: any, err: any) => {
   logger.error(err);
 });
 

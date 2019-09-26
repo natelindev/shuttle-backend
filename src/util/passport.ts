@@ -7,7 +7,7 @@ import getLogger from './logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
-export default passport => {
+export default (passport: any) => {
   /**
    * Jwt strategy
    * verify user identity after login
@@ -15,7 +15,7 @@ export default passport => {
   passport.use(
     new JwtStrategy(
       {
-        jwtFromRequest: req => req.cookies.jwt,
+        jwtFromRequest: (req: any) => req.cookies.jwt,
         secretOrKey: process.env.SECRET
       },
       (jwtPayload, done) => {
@@ -36,10 +36,7 @@ export default passport => {
     new LocalStrategy(async (username, password, done) => {
       try {
         const user = await User.findOne({ username });
-        const passwordsMatch = await bcrypt.compare(
-          password,
-          user.hashedPassword
-        );
+        const passwordsMatch = await bcrypt.compare(password, user.hashedPassword);
 
         if (passwordsMatch) {
           return done(null, user);

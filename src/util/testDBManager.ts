@@ -6,6 +6,9 @@ import getLogger from './logger';
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
 export default class TestDBManager {
+  server: MongoMemoryServer;
+  connection: any;
+
   constructor() {
     this.server = new MongoMemoryServer();
     this.connection = null;

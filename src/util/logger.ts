@@ -1,16 +1,36 @@
-/* eslint-disable no-console */
-///
-import colors from './color';
+import { colors } from './consts';
 
+/**
+ * Enum for logger logLevel.
+ * @readonly
+ * @enum {string}
+ */
+export const enum logLevel {
+  Info = 'Info',
+  Debug = 'Debug',
+  Warning = 'Warning',
+  Error = 'Error'
+}
+
+/**
+ * custom Logger
+ *
+ */
 class Logger {
-  componentName: string;
-  logLevel: logLevel;
+  private componentName: string;
 
+  /**
+   * create a new Logger
+   * @param {string} componentName Name of component
+   */
   constructor(componentName: string) {
     this.componentName = componentName;
   }
 
-  static log(logLevel: logLevel, componentName: string, message: string) {
+  /**
+   * private internal log function
+   */
+  private static log(logLevel: logLevel, componentName: string, message: any) {
     const time = new Date();
     let color = colors.FgWhite;
     switch (logLevel) {
@@ -33,27 +53,27 @@ class Logger {
     console.log(`${time.toISOString()} - ${color}[${logLevel}][${componentName}]` + ` ${message}${colors.Reset}`);
   }
 
-  static raw(message: string) {
+  raw(message: any) {
     console.log(message);
   }
 
-  info(message: string) {
-    Logger.log('Info', this.componentName, message);
+  info(message: any) {
+    Logger.log(logLevel.Info, this.componentName, message);
   }
 
-  error(message: string) {
-    Logger.log('Error', this.componentName, message);
+  error(message: any) {
+    Logger.log(logLevel.Error, this.componentName, message);
   }
 
-  debug(message: string) {
-    Logger.log('Debug', this.componentName, message);
+  debug(message: any) {
+    Logger.log(logLevel.Debug, this.componentName, message);
   }
 
-  warning(message: string) {
-    Logger.log('Warning', this.componentName, message);
+  warning(message: any) {
+    Logger.log(logLevel.Warning, this.componentName, message);
   }
 }
 
-const getLogger = componentName => new Logger(componentName);
+const getLogger = (componentName: string) => new Logger(componentName);
 
 export default getLogger;
