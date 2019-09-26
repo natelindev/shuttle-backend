@@ -1,5 +1,5 @@
 import { schemaComposer } from 'graphql-compose';
-import { composeWithMongoose } from 'graphql-compose-mongoose/node8';
+import { composeWithMongoose } from 'graphql-compose-mongoose/';
 import getModelList from '../util/modelScanner';
 import getModel from '../util/modelBuilder';
 

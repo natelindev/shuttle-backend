@@ -69,10 +69,7 @@ db.connect();
 app
   .listen(process.env.PORT || 8000)
   .on('listening', () => {
-    logger.info(
-      `Lonefire Js REST/GraphQL API Server is listening on port ${process.env
-        .PORT || 8000}`
-    );
+    logger.info(`Lonefire Js REST/GraphQL API Server is listening on port ${process.env.PORT || 8000}`);
   })
   .on('error', err => {
     logger.error(err);
