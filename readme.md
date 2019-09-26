@@ -1,4 +1,4 @@
-## Lonefire JS
+## Shuttle JS
 
 #### Introduction
 
@@ -44,9 +44,11 @@ create a `.env` file in project directory, with content like this:
 you can change it to whatever port you prefer
 
 ```javascript
-PORT=8080;
-DOC_PORT=3000;
-MONGODB_CONNECT_STRING='mongodb://127.0.0.1/lonefireJs';
+PORT = 7777;
+DOC_PORT = 3000;
+SECRET = 'SOME_RANDOM_STRING';
+JWT_EXPIRATION_MS = 259200000;
+MONGODB_CONNECT_STRING = 'mongodb://127.0.0.1:27017/shuttlejs';
 ```
 
 Install the dependencies using:

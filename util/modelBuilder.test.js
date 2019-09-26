@@ -1,11 +1,13 @@
 import mongoose, { Schema } from 'mongoose';
-import getModelList from './modelScanner';
 import consts from './consts';
 import getModel, { modelParser, evalueateProperty } from './modelBuilder';
 import rng from './randomGenerator';
-import getLogger from './logger';
+import DynamicModel from '../model/dynamicModel';
+import TestDBManager from './testDBManager';
 
-const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
+const testDB = new TestDBManager();
+beforeAll(() => testDB.start());
+afterAll(() => testDB.stop());
 
 describe('modelBuilder', () => {
   describe('evalueateProperty', () => {
@@ -17,7 +19,7 @@ describe('modelBuilder', () => {
           property = 'ObjectId';
         }
         const output = evalueateProperty(type);
-        expect(output).toEqual({ type: global[property] });
+        expect(output).toEqual({ type: Schema.Types[property] });
       });
     });
 
@@ -37,22 +39,49 @@ describe('modelBuilder', () => {
       };
       const resultModel = modelParser('testModel', testModel);
       // is a mongoose model
-      expect(resultModel).toBe(true);
-      // have owner
+      expect(resultModel.prototype instanceof mongoose.Model).toBe(true);
+      // have schema
+      expect(Object.prototype.hasOwnProperty.call(resultModel, 'schema')).toBe(
+        true
+      );
+      const { paths } = resultModel.schema;
       expect(
-        Object.prototype.hasOwnProperty.call(resultModel, 'owner')
-      ).toBeTruthy();
+        paths.owner.instance === 'ObjectID' &&
+          paths.owner.options.ref === 'User'
+      ).toBe(true);
+      expect(paths.name.instance === 'String' && paths.name.isRequired).toBe(
+        true
+      );
+      expect(paths.quantity.instance === 'Number').toBe(true);
     });
   });
+
   describe('getModel', () => {
-    it('should return a mongoose model', async () => {
-      const modelList = await getModelList();
-      logger.info(modelList);
-      const models = await Promise.all(
-        modelList.map(async modelName => getModel(modelName))
-      );
-      logger.info(models);
-      expect(models.every(model => model instanceof mongoose.model)).toBe(true);
+    it('should work with native mongoose model', async () => {
+      const resultModel = await getModel('user');
+      expect(resultModel !== null).toBe(true);
+      expect(resultModel.prototype instanceof mongoose.Model).toBe(true);
+    });
+
+    it('should work with static mongoose model', async () => {
+      const resultModel = await getModel('comment');
+      expect(resultModel !== null).toBe(true);
+      expect(resultModel.prototype instanceof mongoose.Model).toBe(true);
+    });
+
+    it('should work with dynamic mongoose model', async () => {
+      await new DynamicModel({
+        access: 'public',
+        content: {
+          [consts.property.owner]: true,
+          name: 'String!',
+          quantity: 'Number'
+        },
+        name: 'testModel'
+      }).save();
+      const resultModel = await getModel('comment');
+      expect(resultModel !== null).toBe(true);
+      expect(resultModel.prototype instanceof mongoose.Model).toBe(true);
     });
   });
 });

@@ -1,6 +1,14 @@
 import { model, Schema } from 'mongoose';
 import consts from '../util/consts';
 
+/**
+ * Dynamic Model
+ *
+ * @property {String} name
+ * @property {String} description
+ * @property {String} content schema string
+ *
+ */
 const dynamicModelSchema = new Schema(
   {
     name: {
@@ -10,7 +18,7 @@ const dynamicModelSchema = new Schema(
     description: {
       type: String
     },
-    conponent: {
+    content: {
       required: true,
       type: String
     },

@@ -1,6 +1,18 @@
 import { model, Schema } from 'mongoose';
 import consts from '../util/consts';
 
+/**
+ * User
+ *
+ * @property {String} username (required)
+ * @property {String} nickname
+ * @property {String} description
+ * @property {String} role (required)
+ * @property {String} hashedPassword (required)
+ * @property {Date} lastLogin
+ * @property {ObjectId} avatar
+ *
+ */
 const userSchema = new Schema(
   {
     username: {

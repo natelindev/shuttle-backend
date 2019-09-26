@@ -9,24 +9,27 @@ const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
  * Scan the model path and return a list of models as string array
  */
 const getModelList = async () => {
+  let result = [];
   try {
-    // get the static list
+    // Static
     let staticModels = await fh.listDir(
       `./${consts.path.model}`,
       consts.option.files
     );
     // remove .js extenstion
     staticModels = staticModels.map(model => model.slice(0, -3));
-    // get the dynamic models
+    logger.debug(`Scanned static models: ${staticModels}`);
+    result = staticModels;
+
+    // Dynamic
     const dynamicModels = await dynamicModel.find({}).select('name -_id');
     // pack up and remove null or undefined
-    const allModels = [...staticModels, ...dynamicModels].filter(m => m);
-    logger.debug(`Scanned models: ${allModels}`);
-    return allModels;
+    logger.debug(`Scanned dynamic models: ${dynamicModels}`);
+    result = [...staticModels, ...dynamicModels].filter(m => m);
   } catch (err) {
     logger.error(err);
-    return [];
   }
+  return result;
 };
 
 export default getModelList;

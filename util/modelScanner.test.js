@@ -1,4 +1,9 @@
 import getModelList from './modelScanner';
+import TestDBManager from './testDBManager';
+
+const testDB = new TestDBManager();
+beforeAll(() => testDB.start());
+afterAll(() => testDB.stop());
 
 describe('modelScanner', () => {
   describe('getModelList', () => {
