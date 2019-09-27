@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { colors } from './consts';
 
 /**
@@ -50,30 +51,30 @@ class Logger {
         color = colors.FgWhite;
         break;
     }
-    console.log(`${time.toISOString()} - ${color}[${logLevel}][${componentName}]` + ` ${message}${colors.Reset}`);
+    console.log(`${time.toISOString()} - ${color}[${level}][${componentName}]${message}${colors.Reset}`);
   }
 
-  raw(message: any) {
+  static raw(message: any): void {
     console.log(message);
   }
 
-  info(message: any) {
+  info(message: any): void {
     Logger.log(logLevel.Info, this.componentName, message);
   }
 
-  error(message: any) {
+  error(message: any): void {
     Logger.log(logLevel.Error, this.componentName, message);
   }
 
-  debug(message: any) {
+  debug(message: any): void {
     Logger.log(logLevel.Debug, this.componentName, message);
   }
 
-  warning(message: any) {
+  warning(message: any): void {
     Logger.log(logLevel.Warning, this.componentName, message);
   }
 }
 
-const getLogger = (componentName: string) => new Logger(componentName);
+const getLogger = (componentName: string): Logger => new Logger(componentName);
 
 export default getLogger;
