@@ -12,10 +12,7 @@ const getModelList = async () => {
   let result = [];
   try {
     // Static
-    let staticModels = await fh.listDir(
-      `./${consts.path.model}`,
-      consts.option.files
-    );
+    let staticModels = await fh.listDir(`./${consts.path.model}`, consts.option.files);
     // remove .js extenstion
     staticModels = staticModels.map(model => model.slice(0, -3));
     logger.debug(`Scanned static models: ${staticModels}`);

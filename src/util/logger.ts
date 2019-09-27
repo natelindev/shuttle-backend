@@ -6,10 +6,10 @@ import { colors } from './consts';
  * @enum {string}
  */
 export const enum logLevel {
-  Info = 'Info',
-  Debug = 'Debug',
-  Warning = 'Warning',
-  Error = 'Error'
+  Debug = 'Debug', // only on dev env
+  Info = 'Info', // get to stdout
+  Warning = 'Warning', // get to stderr
+  Error = 'Error' // get to stderr
 }
 
 /**
@@ -30,21 +30,21 @@ class Logger {
   /**
    * private internal log function
    */
-  private static log(logLevel: logLevel, componentName: string, message: any) {
+  private static log(level: logLevel, componentName: string, message: any): void {
     const time = new Date();
     let color = colors.FgWhite;
-    switch (logLevel) {
-      case 'Info':
-        color = colors.FgGreen;
-        break;
-      case 'Error':
-        color = colors.FgRed;
-        break;
-      case 'Debug':
+    switch (level) {
+      case logLevel.Debug:
         color = colors.FgCyan;
         break;
-      case 'Warning':
+      case logLevel.Info:
+        color = colors.FgGreen;
+        break;
+      case logLevel.Warning:
         color = colors.FgYellow;
+        break;
+      case logLevel.Error:
+        color = colors.FgRed;
         break;
       default:
         color = colors.FgWhite;
