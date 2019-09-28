@@ -22,7 +22,7 @@ export const enum rngOption {
  * @param {number} min lower limit of the generated number (optional, defaults to 0)
  * @returns {number|string} a random value that fulfills the above requirements
  */
-export default (option: rngOption, max: number, min: number = 0): number | string => {
+export default (option: rngOption, max: number, min = 0): number | string => {
   let result;
   switch (option) {
     case rngOption.decimal:

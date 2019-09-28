@@ -1,13 +1,19 @@
 // import { promisify } from 'util';
 import { promises as fsPromises } from 'fs';
 import { join } from 'path';
-import consts from './consts';
+import { fileOptions } from './consts';
 import getLogger from './logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 const { readdir, stat } = fsPromises;
 
-const listDir = async (path, option = consts.option.all) => {
+/**
+ * listDir
+ * @param path the path of directory
+ * @param option oneof the fileOptions
+ * @returns list of filenames in target directory
+ */
+const listDir = async (path: string, option = fileOptions.all): Promise<string[]> => {
   try {
     const files = await readdir(path);
     const dirs = await Promise.all(
@@ -15,11 +21,11 @@ const listDir = async (path, option = consts.option.all) => {
         .filter(async file => {
           const result = await stat(join(path, file));
           switch (option) {
-            case consts.option.dirs:
+            case fileOptions.dirs:
               return result.isDirectory();
-            case consts.option.files:
+            case fileOptions.files:
               return !result.isDirectory();
-            case consts.option.all:
+            case fileOptions.all:
             default:
               return true;
           }

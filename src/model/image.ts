@@ -1,4 +1,4 @@
-import consts from '../util/consts';
+import { ShuttleModel, modelTypes } from '../types/shuttleModel';
 
 /**
  * Image
@@ -9,10 +9,9 @@ import consts from '../util/consts';
  * @property {Number} width
  *
  */
-export default {
-  [consts.property.owner]: true,
+export default new ShuttleModel('Image', modelTypes.shuttle, true, {
   path: 'String!',
   filename: 'String!',
   height: 'Number',
   width: 'Number'
-};
+});

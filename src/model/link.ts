@@ -1,4 +1,4 @@
-import consts from '../util/consts';
+import { ShuttleModel, modelTypes } from '../types/shuttleModel';
 
 /**
  * Link
@@ -8,9 +8,8 @@ import consts from '../util/consts';
  * @property {String} icon
  *
  */
-export default {
-  [consts.property.owner]: false,
+export default new ShuttleModel('Link', modelTypes.shuttle, true, {
   url: 'String!',
   description: 'String',
   icon: 'String'
-};
+});

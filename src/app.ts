@@ -7,8 +7,8 @@ import passport from 'passport';
 import getLogger from './util/logger';
 import apiLogger from './util/apiLogger';
 import db from './database';
-import getGraphQLSchema from './api/graphql';
-import getRestRouters from './api/rest';
+import getGraphQLSchema from './apiBuilders/graphql';
+import getRestRouters from './apiBuilders/rest';
 import initPassport from './util/passport';
 import authenticate from './util/authenticate';
 
@@ -34,7 +34,7 @@ app.use(json());
 app.disable('x-powered-by');
 
 // Enable REST
-(async () => {
+(async (): Promise<void> => {
   const restRouters = await getRestRouters();
   if (restRouters && restRouters.length > 0) {
     restRouters.forEach(router => {
@@ -44,7 +44,7 @@ app.disable('x-powered-by');
 })();
 
 // Enable GraphQL
-(async () => {
+(async (): Promise<void> => {
   const graphqlSchema = await getGraphQLSchema();
   app.use(
     '/graphql',
@@ -57,7 +57,7 @@ app.disable('x-powered-by');
 
 // Index page message
 app.get('/', (req, res) => {
-  res.send('Lonefire Js REST/GraphQL API Server');
+  res.send('Shuttle REST/GraphQL API Server');
 });
 
 // User authentication

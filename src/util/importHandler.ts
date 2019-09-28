@@ -2,12 +2,12 @@ import getLogger from './logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
-const importOne = async (path, property = 'default') => {
+const importOne = async (path: string, property = 'default'): Promise<any> => {
   const module = await import(path);
   return module[property];
 };
 
-const importMany = async (pathList, property = 'default') => {
+const importMany = async (pathList: string[], property = 'default'): Promise<any[]> => {
   try {
     let items = null;
     if (pathList && pathList.length > 0) {

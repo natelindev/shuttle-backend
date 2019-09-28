@@ -1,12 +1,11 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import passport from 'passport';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { body } from 'express-validator';
-import consts from './consts';
 import asyncHandler from './errorHandler';
 import validate from './apiValidator';
-import User from '../model/user';
+import User, { roles } from '../model/user';
 import getLogger from './logger';
 
 const router = express.Router();
@@ -22,16 +21,16 @@ router.post(
       .exists()
       .withMessage('password required')
   ]),
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { username, password } = req.body;
     const hashCost = 10;
     try {
       const hashedPassword = await bcrypt.hash(password, hashCost);
       // first user will become admin
-      let role = consts.roles.user;
+      let role = roles.user;
       const hasUser = await User.findOne({});
       if (!hasUser) {
-        role = consts.roles.admin;
+        role = roles.admin;
       }
       const newUser = new User({ username, role, hashedPassword });
       await newUser.save();

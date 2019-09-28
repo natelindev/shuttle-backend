@@ -7,14 +7,15 @@ const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
 export default class TestDBManager {
   server: MongoMemoryServer;
-  connection: any;
+
+  connection: typeof mongoose | null;
 
   constructor() {
     this.server = new MongoMemoryServer();
     this.connection = null;
   }
 
-  async start() {
+  async start(): Promise<void> {
     const mongoUri = await this.server.getConnectionString();
     const mongooseOptions = {
       autoReconnect: true,
@@ -27,7 +28,7 @@ export default class TestDBManager {
     });
   }
 
-  stop() {
+  stop(): Promise<boolean> {
     return this.server.stop();
   }
 }

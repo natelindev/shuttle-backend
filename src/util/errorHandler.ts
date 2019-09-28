@@ -3,7 +3,7 @@ import getLogger from './logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
-const asyncHandler = fn => async (...args) => {
+const asyncHandler = (fn: Function) => async (...args: any[]): Promise<any> => {
   try {
     await fn(...args);
   } catch (err) {

@@ -8,7 +8,7 @@ afterAll(() => testDB.stop());
 describe('modelScanner', () => {
   describe('getModelList', () => {
     it('should contain all available static models', async () => {
-      expect(await getModelList()).toContain(
+      expect(await getModelList()).toContain([
         'article',
         'comment',
         'dynamicModel',
@@ -18,7 +18,7 @@ describe('modelScanner', () => {
         'status',
         'tag',
         'user'
-      );
+      ]);
     });
   });
 });

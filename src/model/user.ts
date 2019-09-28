@@ -1,5 +1,11 @@
-import { model, Schema } from 'mongoose';
-import consts from '../util/consts';
+import mongoose, { Schema } from 'mongoose';
+import { ShuttleModel, modelTypes } from '../types/shuttleModel';
+
+export enum roles {
+  admin = 'admin',
+  groupOwner = 'groupOwner',
+  user = 'user'
+}
 
 /**
  * User
@@ -13,41 +19,42 @@ import consts from '../util/consts';
  * @property {ObjectId} avatar
  *
  */
-const userSchema = new Schema(
-  {
-    username: {
-      required: true,
-      index: true,
-      unique: true,
-      type: String
-    },
-    nickname: {
-      type: String
-    },
-    description: {
-      type: String
-    },
-    role: {
-      required: true,
-      type: String,
-      enum: Object.values(consts.role)
-    },
-    [consts.property.access]: {
-      required: true,
-      type: String,
-      enum: Object.values(consts.access)
-    },
-    hashedPassword: {
-      required: true,
-      type: String
-    },
-    lastLogin: {
-      type: Date
-    },
-    avatar: { type: Schema.Types.ObjectId, ref: 'Image' }
+export const userSchema = {
+  username: {
+    required: true,
+    index: true,
+    unique: true,
+    type: String
   },
-  { timestamps: true },
-  { collection: 'user' }
-);
+  nickname: {
+    type: String
+  },
+  description: {
+    type: String
+  },
+  role: {
+    required: true,
+    type: String,
+    enum: Object.values(roles)
+  },
+  hashedPassword: {
+    required: true,
+    type: String
+  },
+  lastLogin: {
+    type: Date
+  },
+  avatar: { type: Schema.Types.ObjectId, ref: 'Image' }
+};
 
-export default model('User', userSchema);
+export interface UserType extends mongoose.Document {
+  username: string;
+  nickname: string;
+  description: string;
+  role: roles;
+  hashedPassword: string;
+  lastLogin: Date;
+  avatar: Schema.Types.ObjectId;
+}
+
+export default new ShuttleModel('User', modelTypes.mongooseSchema, true, userSchema);

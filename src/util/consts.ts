@@ -24,7 +24,7 @@ export const enum colors {
   BgWhite = '\x1b[47m'
 }
 
-export const enum access {
+export enum access {
   public = 'public',
   everyone = 'everyone',
   group = 'group',
@@ -40,9 +40,4 @@ export const enum fileOptions {
   files = 1,
   dirs = 2,
   all = 3
-}
-
-export const enum propertyNames {
-  owner = 'owner',
-  access = 'access'
 }

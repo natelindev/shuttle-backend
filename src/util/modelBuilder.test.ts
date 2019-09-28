@@ -1,5 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import consts from './consts';
 import getModel, { modelParser, evalueateProperty } from './modelBuilder';
 import rng from './randomGenerator';
 import DynamicModel from '../model/dynamicModel';
@@ -41,17 +40,10 @@ describe('modelBuilder', () => {
       // is a mongoose model
       expect(resultModel.prototype instanceof mongoose.Model).toBe(true);
       // have schema
-      expect(Object.prototype.hasOwnProperty.call(resultModel, 'schema')).toBe(
-        true
-      );
+      expect(Object.prototype.hasOwnProperty.call(resultModel, 'schema')).toBe(true);
       const { paths } = resultModel.schema;
-      expect(
-        paths.owner.instance === 'ObjectID' &&
-          paths.owner.options.ref === 'User'
-      ).toBe(true);
-      expect(paths.name.instance === 'String' && paths.name.isRequired).toBe(
-        true
-      );
+      expect(paths.owner.instance === 'ObjectID' && paths.owner.options.ref === 'User').toBe(true);
+      expect(paths.name.instance === 'String' && paths.name.isRequired).toBe(true);
       expect(paths.quantity.instance === 'Number').toBe(true);
     });
   });

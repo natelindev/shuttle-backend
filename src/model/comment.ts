@@ -1,4 +1,4 @@
-import consts from '../util/consts';
+import { ShuttleModel, modelTypes } from '../types/shuttleModel';
 
 /**
  * Comment
@@ -9,10 +9,9 @@ import consts from '../util/consts';
  * @property {Number} likeCount (default:0)
  *
  */
-export default {
-  [consts.property.owner]: true,
+export default new ShuttleModel('Comment', modelTypes.shuttle, true, {
   parent: 'User.Id!',
   content: 'String!',
   status: 'Status.Id',
   likeCount: 'Number:0'
-};
+});
