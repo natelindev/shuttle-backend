@@ -5,6 +5,7 @@
 import mongoose, { Schema, model } from 'mongoose';
 import { ShuttleModel, modelTypes } from '../types/shuttleModel';
 import getLogger from '../util/logger';
+import { access } from '../util/consts';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
@@ -14,10 +15,12 @@ export const shuttleConsts = {
   supportedTypes: ['String', 'Number', 'Date', 'Boolean', 'Id']
 };
 
-export const evalueateProperty = (value: string | Array) => {
+export const parseProperty = (value: string | string[]): any => {
+  // change this into recursive type when typescript 3.7 relases
+
   // recursive array mapping
   if (Array.isArray(value)) {
-    return value.map(v => evalueateProperty(v));
+    return value.map(v => parseProperty(v));
   }
   // schema string parsing
   const result = shuttleConsts.regex.exec(value);
@@ -27,14 +30,15 @@ export const evalueateProperty = (value: string | Array) => {
   }
 
   if (shuttleConsts.supportedTypes.includes(result.groups.type)) {
-    const schemaItem = {};
+    const schemaItem = {} as any;
     if (result.groups.type === 'Id') {
       // ObjectId
       result.groups.type = 'ObjectId';
     }
 
     // find the according type
-    schemaItem.type = Schema.Types[result.groups.type];
+    type supportedTypes = 'String' | 'Number' | 'Date' | 'Boolean' | 'ObjectId';
+    schemaItem.type = Schema.Types[result.groups.type as supportedTypes];
 
     // ref can only be used on ObjectId
     if (result.groups.ref && result.groups.type === 'ObjectId') {
@@ -54,67 +58,29 @@ export const evalueateProperty = (value: string | Array) => {
   return null;
 };
 
-// build a mongoose schema
-export const modelParser = (modelName, customSchmea) => {
-  const coreObj = {};
-
-  // access
-  // all entities need acl for security concerns
-  coreObj[consts.property.access] = {
-    required: true,
-    type: String,
-    enum: Object.values(consts.access)
-  };
-
-  // owner
-  if (customSchmea[consts.property.owner]) {
-    coreObj.owner = { type: Schema.Types.ObjectId, ref: 'User' };
-  }
-
-  // rest of the properties
-  Object.entries(customSchmea).forEach(([key, value]) => {
-    if (key !== consts.property.access && key !== consts.property.owner) {
-      coreObj[key] = evalueateProperty(value);
-    }
-  });
-
-  return model(modelName, new Schema(coreObj, { timestamps: true }, { collection: modelName }));
-};
-
-// import or generate mongoose schema by model Name
-const getModel = async modelName => {
-  let resultModel = null;
-  logger.debug(`checking ${modelName}`);
-  try {
-    const staticModelList = await getModelList();
-    if (staticModelList.includes(modelName)) {
-      // static
-      const importedModel = await importHandler.importOne(`../${path.model}/${modelName}`);
-      if (importedModel instanceof mongoose.model) {
-        // already a mongoose model
-        resultModel = importedModel;
-      } else {
-        // build a new one using custom schmea
-        resultModel = modelParser(modelName, importedModel);
-      }
-    } else {
-      // dynamic
-      const dynamicModel = await DynamicModel.findOne({ name: modelName });
-      if (dynamicModel) {
-        resultModel = modelParser(modelName, dynamicModel.conponent);
-      }
-    }
-  } catch (err) {
-    logger.error(err);
-  }
-
-  return resultModel;
-};
-
 export default (input: ShuttleModel): mongoose.Model<any> => {
   let result: mongoose.Model<any> | null;
   try {
     if (input.type === modelTypes.shuttle) {
+      // from shuttle to mongoose model
+
+      // access
+      const coreObj = {
+        required: true,
+        type: String,
+        enum: Object.values(access)
+      } as any;
+
+      // owner
+      if (input.owner) {
+        coreObj.owner = { type: Schema.Types.ObjectId, ref: 'User' };
+      }
+
+      Object.entries(input.model).forEach(([key, value]) => {
+        coreObj[key] = parseProperty(value);
+      });
+
+      result = model(input.name, new Schema(coreObj, { timestamps: true, collection: input.name }));
     } else if (input.type === modelTypes.mongooseSchema) {
       // from mongooseSchema to mongoose model
       const schema = new mongoose.Schema(input.model);
