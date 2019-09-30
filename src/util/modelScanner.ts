@@ -1,7 +1,7 @@
 import fh from './fileHandler';
 import getLogger from './logger';
 import { path, fileOptions } from './consts';
-import dynamicModel from '../model/dynamicModel';
+import ShuttleModel from '../builtinModels/shuttle';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
@@ -19,8 +19,8 @@ const getModelList = async (): Promise<string[]> => {
     result = staticModels;
 
     // Dynamic models
-    const selectedModels = await dynamicModel.find({}).select('name -_id');
-    const dynamicModels = selectedModels.map(model => model.name);
+    const shuttleModels = await ShuttleModel.find().select('name -_id');
+    const dynamicModels = shuttleModels.map(model => model.name);
 
     // pack up and remove falsy values
     logger.debug(`Scanned dynamic models: ${dynamicModels}`);

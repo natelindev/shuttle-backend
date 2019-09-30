@@ -1,4 +1,4 @@
-import { ShuttleModel, modelTypes } from '../types/shuttleModel';
+import { ShuttleModelWrapper } from '../builtinModels/shuttle';
 
 /**
  * Note
@@ -11,7 +11,7 @@ import { ShuttleModel, modelTypes } from '../types/shuttleModel';
  * @property {Number} likeCount (default:0)
  *
  */
-export default new ShuttleModel('Note', modelTypes.shuttle, true, {
+export default new ShuttleModelWrapper('Note', true, {
   title: 'String!',
   content: 'String!',
   tags: ['Tag.Id'],

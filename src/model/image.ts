@@ -1,4 +1,4 @@
-import { ShuttleModel, modelTypes } from '../types/shuttleModel';
+import { ShuttleModelWrapper } from '../builtinModels/shuttle';
 
 /**
  * Image
@@ -9,7 +9,7 @@ import { ShuttleModel, modelTypes } from '../types/shuttleModel';
  * @property {Number} width
  *
  */
-export default new ShuttleModel('Image', modelTypes.shuttle, true, {
+export default new ShuttleModelWrapper('Image', true, {
   path: 'String!',
   filename: 'String!',
   height: 'Number',

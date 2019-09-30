@@ -1,4 +1,4 @@
-import { ShuttleModel, modelTypes } from '../types/shuttleModel';
+import { ShuttleModelWrapper } from '../builtinModels/shuttle';
 
 /**
  * Tag
@@ -8,7 +8,7 @@ import { ShuttleModel, modelTypes } from '../types/shuttleModel';
  * @property {String} icon
  *
  */
-export default new ShuttleModel('tag', modelTypes.shuttle, true, {
+export default new ShuttleModelWrapper('tag', true, {
   parent: 'Tag.Id',
   name: 'String!',
   icon: 'String'

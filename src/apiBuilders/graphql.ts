@@ -1,20 +1,21 @@
+import { GraphQLSchema } from 'graphql';
 import { schemaComposer } from 'graphql-compose';
 import { composeWithMongoose } from 'graphql-compose-mongoose/';
 import getModelList from '../util/modelScanner';
-import getModel from '../util/modelBuilder';
+import getModel from '../modelBuilders/mongoose';
 
 import getLogger from '../util/logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
-const getGraphQLSchema = async () => {
-  let graphqlSchema = null;
+const getGraphQLSchema = async (): Promise<GraphQLSchema | null> => {
+  let graphqlSchema: GraphQLSchema | null = null;
   try {
     const modelList = await getModelList();
     await Promise.all(
       modelList.map(async modelName => {
         const Model = await getModel(modelName);
-        const typeComposer = composeWithMongoose(Model, {});
+        const typeComposer = composeWithMongoose(Model);
         if (typeComposer) {
           schemaComposer.Query.addFields({
             [`${modelName}ById`]: typeComposer.getResolver('findById'),

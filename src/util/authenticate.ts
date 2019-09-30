@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { body } from 'express-validator';
 import asyncHandler from './errorHandler';
 import validate from './apiValidator';
-import User, { roles } from '../model/user';
+import User, { roles } from '../builtinModels/user';
 import getLogger from './logger';
 
 const router = express.Router();

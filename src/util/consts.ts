@@ -32,8 +32,8 @@ export enum access {
 }
 
 export const enum path {
-  model = 'model',
-  image = 'image'
+  model = 'src/model',
+  image = 'src/image'
 }
 
 export const enum fileOptions {

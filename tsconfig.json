@@ -12,6 +12,7 @@
     "paths": {
       "*": ["node_modules/*", "src/types/*"]
     },
+    "typeRoots": ["src/types"],
     "outDir": "./built"
   },
   "include": ["./src/**/*", "jest.config.js"],

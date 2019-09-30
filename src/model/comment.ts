@@ -1,4 +1,4 @@
-import { ShuttleModel, modelTypes } from '../types/shuttleModel';
+import { ShuttleModelWrapper } from '../builtinModels/shuttle';
 
 /**
  * Comment
@@ -9,7 +9,7 @@ import { ShuttleModel, modelTypes } from '../types/shuttleModel';
  * @property {Number} likeCount (default:0)
  *
  */
-export default new ShuttleModel('Comment', modelTypes.shuttle, true, {
+export default new ShuttleModelWrapper('Comment', true, {
   parent: 'User.Id!',
   content: 'String!',
   status: 'Status.Id',

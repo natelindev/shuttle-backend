@@ -1,4 +1,4 @@
-import { ShuttleModel, modelTypes } from '../types/shuttleModel';
+import { ShuttleModelWrapper } from '../builtinModels/shuttle';
 
 /**
  * Link
@@ -8,7 +8,7 @@ import { ShuttleModel, modelTypes } from '../types/shuttleModel';
  * @property {String} icon
  *
  */
-export default new ShuttleModel('Link', modelTypes.shuttle, true, {
+export default new ShuttleModelWrapper('Link', true, {
   url: 'String!',
   description: 'String',
   icon: 'String'

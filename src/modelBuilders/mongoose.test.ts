@@ -1,8 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 import getModel, { modelParser, evalueateProperty } from './modelBuilder';
-import rng from './randomGenerator';
-import DynamicModel from '../model/dynamicModel';
-import TestDBManager from './testDBManager';
+import rng from '../util/randomGenerator';
+import ShuttleModel from '../builtinModels/shuttle';
+import TestDBManager from '../util/testDBManager';
 
 const testDB = new TestDBManager();
 beforeAll(() => testDB.start());
@@ -62,7 +62,7 @@ describe('modelBuilder', () => {
     });
 
     it('should work with dynamic mongoose model', async () => {
-      await new DynamicModel({
+      await new ShuttleModel({
         access: 'public',
         content: {
           [consts.property.owner]: true,

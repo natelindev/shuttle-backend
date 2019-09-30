@@ -1,18 +1,20 @@
-import express from 'express';
+/* eslint-disable no-underscore-dangle */
+import express, { Request, Response, Router } from 'express';
 import mongoose from 'mongoose';
 import { param } from 'express-validator';
 import validate from '../util/apiValidator';
 import authorize from '../util/authorize';
-import consts from '../util/consts';
 import getLogger from '../util/logger';
 import getModelList from '../util/modelScanner';
 import asyncHandler from '../util/errorHandler';
-import getModel from '../util/modelBuilder';
+import { roles } from '../builtinModels/user';
+import getModel from '../modelBuilders/mongoose';
+import { access } from '../util/consts';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
-const getRestRouters = async () => {
-  let restRouters = [];
+const getRestRouters = async (): Promise<Router[]> => {
+  let restRouters: Router[] = [];
   try {
     // Import the models
     const modelList = await getModelList();
@@ -26,8 +28,8 @@ const getRestRouters = async () => {
           router
             .route(`/${modelName}`)
             .get(
-              authorize(consts.access.public),
-              asyncHandler(async (req, res) => {
+              authorize(access.public),
+              asyncHandler(async (req: Request, res: Response) => {
                 const allModels = await Model.find({});
                 if (allModels) {
                   res.send(allModels);
@@ -37,9 +39,9 @@ const getRestRouters = async () => {
               })
             )
             .post(
-              authorize(consts.access.everyone),
-              asyncHandler(async (req, res) => {
-                if (req.user.role !== consts.roles.admin) {
+              authorize(access.everyone),
+              asyncHandler(async (req: Request, res: Response) => {
+                if (req.user.role !== roles.admin) {
                   // only admin can change ownership
                   req.body.author = req.user.id;
                 }
@@ -48,9 +50,9 @@ const getRestRouters = async () => {
               })
             )
             .put(
-              authorize(consts.access.group),
-              asyncHandler(async (req, res) => {
-                const allModels = req.body;
+              authorize(access.group),
+              asyncHandler(async (req: Request, res: Response) => {
+                const allModels = req.body as mongoose.Document[];
                 const bulkOperation = Model.collection.initializeUnorderedBulkOp();
                 allModels.forEach(model => {
                   const id = mongoose.Types.ObjectId(model._id);
@@ -63,8 +65,8 @@ const getRestRouters = async () => {
               })
             )
             .delete(
-              authorize(consts.access.group),
-              asyncHandler(async (req, res) => {
+              authorize(access.group),
+              asyncHandler(async (req: Request, res: Response) => {
                 await Model.deleteMany({});
                 res.status(204).end();
               })
@@ -80,8 +82,8 @@ const getRestRouters = async () => {
               ])
             )
             .get(
-              authorize(consts.access.public),
-              asyncHandler(async (req, res) => {
+              authorize(access.public),
+              asyncHandler(async (req: Request, res: Response) => {
                 const model = await Model.findOne({
                   _id: req.params[`${modelName}Id`]
                 });
@@ -93,42 +95,36 @@ const getRestRouters = async () => {
               })
             )
             .put(
-              authorize(consts.access.group),
-              asyncHandler(async (req, res) => {
-                if (req.user.role !== consts.roles.admin) {
+              authorize(access.group),
+              asyncHandler(async (req: Request, res: Response) => {
+                if (req.user.role !== roles.admin) {
                   // only admin can change ownership
                   req.body.author = req.user.id;
                 }
-                const model = await Model.findByIdAndUpdate(
-                  req.params[`${modelName}Id`],
-                  req.body
-                );
+                const model = await Model.findByIdAndUpdate(req.params[`${modelName}Id`], req.body);
                 model.save();
                 res.status(204).end();
               })
             )
             .patch(
-              authorize(consts.access.group),
-              asyncHandler(async (req, res) => {
-                if (req.user.role !== consts.roles.admin) {
+              authorize(access.group),
+              asyncHandler(async (req: Request, res: Response) => {
+                if (req.user.role !== roles.admin) {
                   // only admin can change ownership
                   if (Object.prototype.hasOwnProperty.call(req.body, 'owner')) {
                     delete req.body.owner;
                   }
                 }
-                const model = await Model.findByIdAndUpdate(
-                  req.params[`${modelName}Id`],
-                  {
-                    $set: req.body
-                  }
-                );
+                const model = await Model.findByIdAndUpdate(req.params[`${modelName}Id`], {
+                  $set: req.body
+                });
                 model.save();
                 res.status(204).end();
               })
             )
             .delete(
-              authorize(consts.access.group),
-              asyncHandler(async (req, res) => {
+              authorize(access.group),
+              asyncHandler(async (req: Request, res: Response) => {
                 await Model.findByIdAndRemove(req.params[`${modelName}Id`]);
                 res.status(204).end();
               })

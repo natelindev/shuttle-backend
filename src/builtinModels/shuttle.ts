@@ -1,11 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { access } from '../util/consts';
 
-export const enum modelTypes {
-  shuttle = 'shuttle',
-  mongooseSchema = 'mongooseSchema'
-}
-
 /**
  * Dynamic Model
  *
@@ -14,7 +9,7 @@ export const enum modelTypes {
  * @property {String} content schema string
  *
  */
-const shuttleModelSchema = new Schema(
+const shuttleSchema = new Schema(
   {
     name: {
       required: true,
@@ -37,21 +32,25 @@ const shuttleModelSchema = new Schema(
   { timestamps: true, collection: 'shuttleModel' }
 );
 
-export class ShuttleModel {
-  constructor(name: string, type: modelTypes, owner: boolean, model: any) {
+export interface ShuttleInterface extends mongoose.Document {
+  name: string;
+  type: string;
+  content: string;
+  access: access;
+}
+
+export class ShuttleModelWrapper {
+  constructor(name: string, owner: boolean, model: any) {
     this.name = name;
-    this.type = type;
     this.owner = owner;
     this.model = model;
   }
 
   name: string;
 
-  type: modelTypes;
-
   owner: boolean;
 
   model: any;
 }
 
-export default mongoose.model('ShuttleModel', shuttleModelSchema);
+export default mongoose.model<ShuttleInterface>('ShuttleModel', shuttleSchema);
