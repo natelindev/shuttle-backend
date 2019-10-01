@@ -102,20 +102,31 @@ export const build = (
   return result;
 };
 
+const storedModels: { [key: string]: mongoose.Model<any> } = {};
+
 export default async (modelName: string): Promise<mongoose.Model<any> | null> => {
   let result: mongoose.Model<any> | null;
-  const imported: any = await importHandler.importOne(`../model/${modelName}`);
-  if (imported) {
-    // static
-    result = build(imported);
+
+  if (storedModels[modelName]) {
+    result = storedModels[modelName];
   } else {
-    // dynamic
-    const found = await ShuttleModel.findOne({ name: modelName });
-    if (found) {
-      result = build(new ShuttleModelWrapper(modelName, found.hasOwner, found.content));
+    const imported: any = await importHandler.importOne(`../model/${modelName}`);
+
+    if (imported) {
+      // static
+      result = build(imported);
+      storedModels[modelName] = result;
     } else {
-      logger.error(`Unable to find model ${modelName}`);
-      result = null;
+      // dynamic
+      const found = await ShuttleModel.findOne({ name: modelName });
+
+      if (found) {
+        result = build(new ShuttleModelWrapper(modelName, found.hasOwner, found.content));
+        storedModels[modelName] = result;
+      } else {
+        logger.error(`Unable to find model ${modelName}`);
+        result = null;
+      }
     }
   }
   return result;
