@@ -70,13 +70,6 @@ export const build = (
       // shuttle models
       const coreSchema = {} as any;
 
-      // access
-      coreSchema.access = {
-        required: true,
-        type: String,
-        enum: Object.values(access)
-      };
-
       // owner
       if (input.hasOwner) {
         coreSchema.owner = { type: Schema.Types.ObjectId, ref: 'User' };

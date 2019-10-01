@@ -49,7 +49,8 @@
     "test": "jest",
     "build": "tsc",
     "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts",
-    "prod": "tsc && node ./build/index.js"
+    "prod": "tsc && node ./built/src/app.js",
+    "debug": "tsc && node --inspect ./built/src/app.js"
   },
   "author": "llldar",
   "repository": "https://github.com/llldar/shuttle.js",

@@ -41,10 +41,15 @@ const getRestRouters = async (): Promise<Router[]> => {
             .post(
               authorize(access.everyone),
               asyncHandler(async (req: Request, res: Response) => {
-                if (req.user.role !== roles.admin) {
-                  // only admin can change ownership
-                  req.body.author = req.user.id;
+                if (req.body.owner) {
+                  // only admin can set different owner
+                  if (req.user.role !== roles.admin) {
+                    req.body.owner = req.user.id;
+                  }
+                } else {
+                  req.body.owner = req.user.id;
                 }
+
                 const model = await new Model(req.body).save();
                 res.status(201).send({ Location: `${req.url}/${model._id}` });
               })
@@ -97,9 +102,13 @@ const getRestRouters = async (): Promise<Router[]> => {
             .put(
               authorize(access.group),
               asyncHandler(async (req: Request, res: Response) => {
-                if (req.user.role !== roles.admin) {
-                  // only admin can change ownership
-                  req.body.author = req.user.id;
+                if (req.body.owner) {
+                  // only admin can set different owner
+                  if (req.user.role !== roles.admin) {
+                    req.body.owner = req.user.id;
+                  }
+                } else {
+                  req.body.owner = req.user.id;
                 }
                 const model = await Model.findByIdAndUpdate(req.params[`${modelName}Id`], req.body);
                 model.save();
