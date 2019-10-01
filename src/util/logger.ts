@@ -51,7 +51,9 @@ class Logger {
         color = colors.FgWhite;
         break;
     }
-    console.log(`${time.toISOString()} - ${color}[${level}][${componentName}]${message}${colors.Reset}`);
+    console.log(
+      `${time.toISOString()} - ${color}[${level}][${componentName}]${message}${colors.Reset}`
+    );
   }
 
   static raw(message: any): void {

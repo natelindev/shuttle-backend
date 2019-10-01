@@ -66,7 +66,12 @@ export default (requiredAccess: access): RequestHandler =>
             }
             // only owner can access
             // if it does not have owner field, user should not have access to it.
-            if (requiredAccess === access.private && item && item.owner && item.owner.equals(authUser._id)) {
+            if (
+              requiredAccess === access.private &&
+              item &&
+              item.owner &&
+              item.owner.equals(authUser._id)
+            ) {
               next();
               authorized = true;
             }

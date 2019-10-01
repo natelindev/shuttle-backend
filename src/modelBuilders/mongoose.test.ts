@@ -1,47 +1,46 @@
 import mongoose, { Schema } from 'mongoose';
-import getModel, { modelParser, evalueateProperty } from './modelBuilder';
-import rng from '../util/randomGenerator';
-import ShuttleModel from '../builtinModels/shuttle';
-import TestDBManager from '../util/testDBManager';
+import rng, { rngOption } from '../util/randomGenerator';
+import ShuttleModel, { ShuttleModelWrapper } from '../builtinModels/shuttle';
+import { TestDBManager } from '../database';
+import getModel, { parseProperty, build, shuttleConsts, supportedTypes } from './mongoose';
 
 const testDB = new TestDBManager();
 beforeAll(() => testDB.start());
 afterAll(() => testDB.stop());
 
 describe('modelBuilder', () => {
-  describe('evalueateProperty', () => {
+  describe('parseProperty', () => {
     it('should work with all basic types', () => {
-      const types = consts.modelBuilder.supportedTypes;
+      const types = shuttleConsts.supportedTypes;
       types.forEach(type => {
         let property = type;
         if (type === 'Id') {
           property = 'ObjectId';
         }
-        const output = evalueateProperty(type);
-        expect(output).toEqual({ type: Schema.Types[property] });
+        const output = parseProperty(type);
+        expect(output).toEqual({ type: Schema.Types[property as supportedTypes] });
       });
     });
 
     it('should fail on invalid types', () => {
-      const input = rng(consts.rngOption.string, 10);
-      const output = evalueateProperty(input);
+      const input = rng(rngOption.string, 10);
+      const output = parseProperty(input as string);
       expect(output).toEqual(null);
     });
   });
 
-  describe('modelParser', () => {
+  describe('build', () => {
     it('should work with a simple model string', async () => {
-      const testModel = {
-        [consts.property.owner]: true,
+      const testModel = new ShuttleModelWrapper('test', true, {
         name: 'String!',
         quantity: 'Number'
-      };
-      const resultModel = modelParser('testModel', testModel);
+      });
+      const resultModel = build(testModel);
       // is a mongoose model
       expect(resultModel.prototype instanceof mongoose.Model).toBe(true);
       // have schema
       expect(Object.prototype.hasOwnProperty.call(resultModel, 'schema')).toBe(true);
-      const { paths } = resultModel.schema;
+      const { paths } = resultModel.schema as any;
       expect(paths.owner.instance === 'ObjectID' && paths.owner.options.ref === 'User').toBe(true);
       expect(paths.name.instance === 'String' && paths.name.isRequired).toBe(true);
       expect(paths.quantity.instance === 'Number').toBe(true);
@@ -55,7 +54,7 @@ describe('modelBuilder', () => {
       expect(resultModel.prototype instanceof mongoose.Model).toBe(true);
     });
 
-    it('should work with static mongoose model', async () => {
+    it('should work with shuttle model', async () => {
       const resultModel = await getModel('comment');
       expect(resultModel !== null).toBe(true);
       expect(resultModel.prototype instanceof mongoose.Model).toBe(true);
@@ -64,14 +63,14 @@ describe('modelBuilder', () => {
     it('should work with dynamic mongoose model', async () => {
       await new ShuttleModel({
         access: 'public',
+        hasOwner: true,
         content: {
-          [consts.property.owner]: true,
           name: 'String!',
           quantity: 'Number'
         },
         name: 'testModel'
       }).save();
-      const resultModel = await getModel('comment');
+      const resultModel = await getModel('testModel');
       expect(resultModel !== null).toBe(true);
       expect(resultModel.prototype instanceof mongoose.Model).toBe(true);
     });

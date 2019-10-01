@@ -3,8 +3,13 @@ import getLogger from './logger';
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
 const importOne = async (path: string, property = 'default'): Promise<any> => {
-  const module = await import(path);
-  return module[property];
+  let module = null;
+  try {
+    module = await import(path);
+  } catch (err) {
+    logger.error(err);
+  }
+  return module ? module[property] : null;
 };
 
 const importMany = async (pathList: string[], property = 'default'): Promise<any[]> => {

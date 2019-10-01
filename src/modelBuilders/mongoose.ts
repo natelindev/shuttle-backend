@@ -3,7 +3,7 @@
  */
 
 import mongoose, { Schema, model } from 'mongoose';
-import { ShuttleModelWrapper } from '../builtinModels/shuttle';
+import ShuttleModel, { ShuttleModelWrapper } from '../builtinModels/shuttle';
 import importHandler from '../util/importHandler';
 import getLogger from '../util/logger';
 import { access } from '../util/consts';
@@ -15,6 +15,8 @@ export const shuttleConsts = {
   regex: /^(?<ref>[a-zA-Z]+\.)?((?<type>[a-zA-Z]+))(:(?<default>.+))?(?<required>!)?$/,
   supportedTypes: ['String', 'Number', 'Date', 'Boolean', 'Id']
 };
+
+export type supportedTypes = 'String' | 'Number' | 'Date' | 'Boolean' | 'ObjectId';
 
 export const parseProperty = (value: string | string[]): any => {
   // change this into recursive type when typescript 3.7 relases
@@ -39,7 +41,6 @@ export const parseProperty = (value: string | string[]): any => {
     }
 
     // find the according type
-    type supportedTypes = 'String' | 'Number' | 'Date' | 'Boolean' | 'ObjectId';
     schemaItem.type = Schema.Types[matches.groups.type as supportedTypes];
 
     // ref can only be used on ObjectId
@@ -60,21 +61,24 @@ export const parseProperty = (value: string | string[]): any => {
   return null;
 };
 
-export const build = (input: ShuttleModelWrapper | mongoose.Model<any>): mongoose.Model<any> | null => {
+export const build = (
+  input: ShuttleModelWrapper | mongoose.Model<any>
+): mongoose.Model<any> | null => {
   let result: mongoose.Model<any> | null = null;
   try {
     if (input instanceof ShuttleModelWrapper) {
       // shuttle models
+      const coreSchema = {} as any;
 
       // access
-      const coreSchema = {
+      coreSchema.access = {
         required: true,
         type: String,
         enum: Object.values(access)
-      } as any;
+      };
 
       // owner
-      if (input.owner) {
+      if (input.hasOwner) {
         coreSchema.owner = { type: Schema.Types.ObjectId, ref: 'User' };
       }
 
@@ -83,8 +87,11 @@ export const build = (input: ShuttleModelWrapper | mongoose.Model<any>): mongoos
         coreSchema[key] = parseProperty(value as string | string[]);
       });
 
-      result = model(input.name, new Schema(coreSchema, { timestamps: true, collection: input.name }));
-    } else if (input instanceof mongoose.Model) {
+      result = model(
+        input.name,
+        new Schema(coreSchema, { timestamps: true, collection: input.name })
+      );
+    } else if (input.prototype instanceof mongoose.Model) {
       result = input;
     } else {
       logger.error(`Unsupported model dectected: ${input}`);
@@ -96,6 +103,20 @@ export const build = (input: ShuttleModelWrapper | mongoose.Model<any>): mongoos
 };
 
 export default async (modelName: string): Promise<mongoose.Model<any> | null> => {
-  const imported: any = await importHandler.importOne(modelName);
-  return build(imported);
+  let result: mongoose.Model<any> | null;
+  const imported: any = await importHandler.importOne(`../model/${modelName}`);
+  if (imported) {
+    // static
+    result = build(imported);
+  } else {
+    // dynamic
+    const found = await ShuttleModel.findOne({ name: modelName });
+    if (found) {
+      result = build(new ShuttleModelWrapper(modelName, found.hasOwner, found.content));
+    } else {
+      logger.error(`Unable to find model ${modelName}`);
+      result = null;
+    }
+  }
+  return result;
 };

@@ -15,18 +15,18 @@ const shuttleSchema = new Schema(
       required: true,
       type: String
     },
-    type: {
-      required: true,
-      type: String
-    },
-    content: {
-      required: true,
-      type: String
-    },
     access: {
       required: true,
       type: String,
       enum: Object.values(access)
+    },
+    hasOwner: {
+      required: true,
+      type: Boolean
+    },
+    content: {
+      required: true,
+      type: Schema.Types.Mixed
     }
   },
   { timestamps: true, collection: 'shuttleModel' }
@@ -34,23 +34,27 @@ const shuttleSchema = new Schema(
 
 export interface ShuttleInterface extends mongoose.Document {
   name: string;
-  type: string;
-  content: string;
   access: access;
+  hasOwner: boolean;
+  content: ShuttleSchema;
+}
+
+export interface ShuttleSchema {
+  [key: string]: any;
 }
 
 export class ShuttleModelWrapper {
-  constructor(name: string, owner: boolean, model: any) {
+  constructor(name: string, hasOwner: boolean, model: ShuttleSchema) {
     this.name = name;
-    this.owner = owner;
+    this.hasOwner = hasOwner;
     this.model = model;
   }
 
   name: string;
 
-  owner: boolean;
+  hasOwner: boolean;
 
-  model: any;
+  model: ShuttleSchema;
 }
 
 export default mongoose.model<ShuttleInterface>('ShuttleModel', shuttleSchema);

@@ -13,7 +13,9 @@ describe('randomGenerator', () => {
     it('should generate a random integer', async () => {
       for (let len = 0; len < 10; ++len) {
         const result = rng(rngOption.integer, 100, -100);
-        expect(typeof result === 'number' && result <= 100 && result >= -100 && result % 1 === 0).toBe(true);
+        expect(
+          typeof result === 'number' && result <= 100 && result >= -100 && result % 1 === 0
+        ).toBe(true);
       }
     });
   });
