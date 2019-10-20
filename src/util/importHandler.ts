@@ -23,7 +23,7 @@ const importMany = async (pathList: string[], property = 'default'): Promise<any
             logger.debug(`Imported module: ${path}`);
             return imported[property];
           } catch (err) {
-            logger.warning(`Failed to import: ${path}`);
+            logger.warn(`Failed to import: ${path}`);
             return null;
           }
         })

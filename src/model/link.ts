@@ -1,4 +1,5 @@
 import { ShuttleModelWrapper } from '../builtinModels/shuttle';
+import { access } from '../util/consts';
 
 /**
  * Link
@@ -8,7 +9,7 @@ import { ShuttleModelWrapper } from '../builtinModels/shuttle';
  * @property {String} icon
  *
  */
-export default new ShuttleModelWrapper('Link', true, {
+export default new ShuttleModelWrapper('Link', access.admin, true, {
   url: 'String!',
   description: 'String',
   icon: 'String'

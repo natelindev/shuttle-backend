@@ -9,8 +9,8 @@ import apiLogger from './util/apiLogger';
 import db from './database';
 import getGraphQLSchema from './apiBuilders/graphql';
 import getRestRouters from './apiBuilders/rest';
-import initPassport from './util/passport';
-import authenticate from './util/authenticate';
+import initPassport from './auth/passport';
+import authenticate from './auth/authenticate';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 const app = express();
@@ -57,7 +57,7 @@ app.disable('x-powered-by');
 
 // Index page message
 app.get('/', (req, res) => {
-  res.send('Shuttle REST/GraphQL API Server');
+  res.send('Shuttle REST/GraphQL API server');
 });
 
 // User authentication
@@ -69,8 +69,10 @@ db.connect();
 app
   .listen(process.env.PORT || 8000)
   .on('listening', () => {
-    logger.info(`Shuttle REST/GraphQL API Server is listening on port ${process.env.PORT || 8000}`);
+    logger.info(`Shuttle REST/GraphQL API server is listening on port ${process.env.PORT || 8000}`);
   })
   .on('error', err => {
     logger.error(err);
   });
+
+export default app;

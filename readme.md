@@ -2,7 +2,7 @@
 
 #### Introduction
 
-Built with `Express`, `Node.JS`
+Built with `Express`, `Node.JS`, using `Typescript`
 
 #### Setup
 
@@ -16,7 +16,17 @@ Start the `MongoDB` using command
 mongod
 ```
 
-Or alternatively, run `MongoDB` as a service
+##### macOS
+
+On macOS, you can install a mongdb GUI client using
+
+```bash
+brew cask install mongodb
+```
+
+##### Linux
+
+On linux, you should run `MongoDB` as a service
 
 ```bash
 vi /etc/systemd/system/mongo.service
@@ -31,13 +41,19 @@ After=network.target
 
 [Service]
 Type=simple
-User=root
+User=your_user_name
 ExecStart=/usr/bin/mongod
 Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
 ```
+
+##### Windows
+
+On windows
+
+##### Add dotenv file
 
 create a `.env` file in project directory, with content like this:
 
@@ -51,7 +67,15 @@ JWT_EXPIRATION_MS = 259200000;
 MONGODB_CONNECT_STRING = 'mongodb://127.0.0.1:27017/shuttlejs';
 ```
 
+##### Install dependencies
+
 Install the dependencies using:
+
+```bash
+yarn install
+```
+
+or
 
 ```bash
 npm install
@@ -62,10 +86,44 @@ npm install
 Enter the project directory and
 
 ```shell
+yarn dev
+```
+
+or
+
+```bash
 npm start
 ```
 
+or
+
+```bash
+npm run dev
+```
+
+#### Compile Typescrit and run the JS
+
+Enter the project directory and
+
+```shell
+yarn prod
+```
+
+or
+
+```bash
+npm run prod
+```
+
 #### Lint
+
+You need eslint installed globally
+
+```bash
+yarn lint
+```
+
+or
 
 ```bash
 npm run lint
@@ -80,5 +138,25 @@ Go to `Settings-> Debug: Node: Auto Attach`, Set it to be `On`
 And then
 
 ```bash
-npm run debug
+yarn debug
+```
+
+or
+
+```bash
+npm debug
+```
+
+#### Run tests
+
+You need jest installed globally
+
+```bash
+yarn test
+```
+
+or
+
+```bash
+npm test
 ```

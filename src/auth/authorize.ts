@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import passport from 'passport';
-import getLogger from './logger';
-import asyncHandler from './errorHandler';
-import getModelList from './modelScanner';
-import importHandler from './importHandler';
-import { path, access } from './consts';
+import getLogger from '../util/logger';
+import asyncHandler from '../util/errorHandler';
+import getModelList from '../util/modelScanner';
+import importHandler from '../util/importHandler';
+import { path, access } from '../util/consts';
 import User, { roles } from '../builtinModels/user';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
@@ -84,7 +84,7 @@ export default (requiredAccess: access): RequestHandler =>
               logger.error(err);
             }
           } else {
-            logger.warning(`Unkown item type ${itemType} when checking ownership.`);
+            logger.warn(`Unkown item type ${itemType} when checking ownership.`);
           }
         }
       } else {

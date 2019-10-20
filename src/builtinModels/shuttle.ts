@@ -1,5 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 import { access } from '../util/consts';
+import getLogger from '../util/logger';
+
+const logger = getLogger('shuttleModel');
 
 /**
  * Dynamic Model
@@ -34,7 +37,7 @@ const shuttleSchema = new Schema(
 
 export interface ShuttleInterface extends mongoose.Document {
   name: string;
-  access: access;
+  access: access | string;
   hasOwner: boolean;
   content: ShuttleSchema;
 }
@@ -44,13 +47,23 @@ export interface ShuttleSchema {
 }
 
 export class ShuttleModelWrapper {
-  constructor(name: string, hasOwner: boolean, model: ShuttleSchema) {
+  constructor(name: string, acc: access | string, hasOwner: boolean, model: ShuttleSchema) {
     this.name = name;
     this.hasOwner = hasOwner;
+    this.access = acc;
     this.model = model;
+    ((): void => {
+      if (!/^[0-3]{2}[0-2][01]$/.test(acc)) {
+        this.access = '0000';
+        logger.warn(`Invalid access ${acc} detected`);
+        logger.warn(`changed to default 0000`);
+      }
+    })();
   }
 
   name: string;
+
+  access: access | string;
 
   hasOwner: boolean;
 

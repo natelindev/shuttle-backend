@@ -9,7 +9,7 @@ import { colors } from './consts';
 export const enum logLevel {
   Debug = 'Debug', // only on dev env
   Info = 'Info', // get to stdout
-  Warning = 'Warning', // get to stderr
+  Warn = 'Warn', // get to stderr
   Error = 'Error' // get to stderr
 }
 
@@ -41,7 +41,7 @@ class Logger {
       case logLevel.Info:
         color = colors.FgGreen;
         break;
-      case logLevel.Warning:
+      case logLevel.Warn:
         color = colors.FgYellow;
         break;
       case logLevel.Error:
@@ -72,8 +72,8 @@ class Logger {
     Logger.log(logLevel.Debug, this.componentName, message);
   }
 
-  warning(message: any): void {
-    Logger.log(logLevel.Warning, this.componentName, message);
+  warn(message: any): void {
+    Logger.log(logLevel.Warn, this.componentName, message);
   }
 }
 

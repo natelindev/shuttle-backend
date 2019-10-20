@@ -1,4 +1,5 @@
 import { ShuttleModelWrapper } from '../builtinModels/shuttle';
+import { access } from '../util/consts';
 
 /**
  * Note
@@ -13,7 +14,7 @@ import { ShuttleModelWrapper } from '../builtinModels/shuttle';
  * @property {Number} likeCount (default:0)
  *
  */
-export default new ShuttleModelWrapper('Article', true, {
+export default new ShuttleModelWrapper('Article', access.public, true, {
   title: 'String!',
   content: 'String!',
   tags: ['Tag.Id'],

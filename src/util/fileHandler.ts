@@ -13,10 +13,7 @@ const { readdir, stat } = fsPromises;
  * @param option oneof the fileOptions
  * @returns list of filenames in target directory
  */
-const listDir = async (
-  path: string,
-  option = fileOptions.all
-): Promise<string[]> => {
+const listDir = async (path: string, option = fileOptions.all): Promise<string[]> => {
   try {
     const files = await readdir(path);
     const dirs = await Promise.all(

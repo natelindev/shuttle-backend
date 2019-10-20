@@ -6,7 +6,8 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js'],
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest'
+    '^.+\\.(ts)$': 'ts-jest'
   },
-  testEnvironment: 'node'
+  testEnvironment: 'node',
+  testPathIgnorePatterns: ['<rootDir>/built/']
 };

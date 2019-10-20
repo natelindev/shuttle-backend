@@ -3,7 +3,7 @@ import express, { Request, Response, Router } from 'express';
 import mongoose from 'mongoose';
 import { param } from 'express-validator';
 import validate from '../util/apiValidator';
-import authorize from '../util/authorize';
+import authorize from '../auth/authorize';
 import getLogger from '../util/logger';
 import getModelList from '../util/modelScanner';
 import asyncHandler from '../util/errorHandler';

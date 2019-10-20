@@ -6,7 +6,6 @@ import mongoose, { Schema, model } from 'mongoose';
 import ShuttleModel, { ShuttleModelWrapper } from '../builtinModels/shuttle';
 import importHandler from '../util/importHandler';
 import getLogger from '../util/logger';
-import { access } from '../util/consts';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
@@ -114,7 +113,9 @@ export default async (modelName: string): Promise<mongoose.Model<any> | null> =>
       const found = await ShuttleModel.findOne({ name: modelName });
 
       if (found) {
-        result = build(new ShuttleModelWrapper(modelName, found.hasOwner, found.content));
+        result = build(
+          new ShuttleModelWrapper(modelName, found.access, found.hasOwner, found.content)
+        );
         storedModels[modelName] = result;
       } else {
         logger.error(`Unable to find model ${modelName}`);

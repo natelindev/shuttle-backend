@@ -5,7 +5,7 @@ import passport from 'passport';
 import bcrypt from 'bcrypt';
 import User from '../model/user';
 import 'dotenv/config';
-import getLogger from './logger';
+import getLogger from '../util/logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 

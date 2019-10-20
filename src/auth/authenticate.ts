@@ -3,10 +3,10 @@ import passport from 'passport';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { body } from 'express-validator';
-import asyncHandler from './errorHandler';
-import validate from './apiValidator';
+import asyncHandler from '../util/errorHandler';
+import validate from '../util/apiValidator';
 import User, { roles } from '../builtinModels/user';
-import getLogger from './logger';
+import getLogger from '../util/logger';
 
 const router = express.Router();
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
@@ -16,7 +16,13 @@ router.post(
   validate([
     body('username')
       .exists()
-      .withMessage('username required'),
+      .withMessage('username required')
+      .custom(async username => {
+        const user = await User.findOne({ username });
+        if (user) {
+          throw Error('username already taken');
+        }
+      }),
     body('password')
       .exists()
       .withMessage('password required')

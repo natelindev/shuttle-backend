@@ -1,4 +1,5 @@
 import { ShuttleModelWrapper } from '../builtinModels/shuttle';
+import { access } from '../util/consts';
 
 /**
  * Comment
@@ -9,7 +10,7 @@ import { ShuttleModelWrapper } from '../builtinModels/shuttle';
  * @property {Number} likeCount (default:0)
  *
  */
-export default new ShuttleModelWrapper('Comment', true, {
+export default new ShuttleModelWrapper('Comment', access.public, true, {
   parent: 'User.Id!',
   content: 'String!',
   status: 'Status.Id',

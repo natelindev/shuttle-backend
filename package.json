@@ -1,6 +1,7 @@
 {
-  "name": "shuttlejs",
+  "name": "shuttle-backend",
   "version": "0.1.0",
+  "private": true,
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/cookie-parser": "^1.4.2",
@@ -10,6 +11,7 @@
     "@types/passport": "^1.0.1",
     "@types/passport-jwt": "^3.0.2",
     "@types/passport-local": "^1.0.33",
+    "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "^2.3.1",
     "@typescript-eslint/parser": "^2.3.1",
     "eslint": "^6.4.0",
@@ -20,6 +22,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
+    "supertest": "^4.0.2",
     "ts-jest": "^24.1.0",
     "ts-node": "^8.4.1",
     "ts-node-dev": "^1.0.0-pre.43",
@@ -43,16 +46,16 @@
     "mongoose": "^5.7.1",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "validator": "^11.1.0"
   },
   "scripts": {
+    "start": "npm run dev",
     "test": "jest",
     "build": "tsc",
+    "lint": "eslint . & echo 'lint complete'",
     "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts",
     "prod": "tsc && node ./built/src/app.js",
     "debug": "tsc && node --inspect ./built/src/app.js"
-  },
-  "author": "llldar",
-  "repository": "https://github.com/llldar/shuttle.js",
-  "license": "MIT"
+  }
 }
