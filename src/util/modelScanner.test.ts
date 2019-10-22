@@ -1,5 +1,5 @@
 import getModelList from './modelScanner';
-import ShuttleModel from '../builtinModels/shuttle';
+import ShuttleModel from '../builtinModels/shuttleModel';
 import { TestDBManager } from '../database';
 
 const testDB = new TestDBManager();

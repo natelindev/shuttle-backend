@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import rng, { rngOption } from '../util/randomGenerator';
-import ShuttleModel, { ShuttleModelWrapper } from '../builtinModels/shuttle';
+import ShuttleModel, { ShuttleModelWrapper } from '../builtinModels/shuttleModel';
 import { TestDBManager } from '../database';
 import getModel, { parseProperty, build, shuttleConsts, supportedTypes } from './mongoose';
 

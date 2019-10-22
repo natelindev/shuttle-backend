@@ -1,7 +1,7 @@
 import fh from './fileHandler';
 import getLogger from './logger';
 import { path, fileOptions } from './consts';
-import ShuttleModel from '../builtinModels/shuttle';
+import ShuttleModel from '../builtinModels/shuttleModel';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 

@@ -24,23 +24,6 @@ export const enum colors {
   BgWhite = '\x1b[47m'
 }
 
-/**
- * access
- * self   goupowner  authedUser  publicVisitor
- *   3      3           2           1
- *  0 -> 00 -> no access
- *  1 -> 01 -> r
- *  2 -> 10 -> rw (cannot transfer ownership or delete)
- *  3 -> 11 -> full access
- */
-export enum access {
-  public = '3311',
-  everyone = '3310',
-  group = '3300',
-  private = '3000',
-  admin = '0000'
-}
-
 export const enum path {
   model = 'src/model',
   image = 'src/image'

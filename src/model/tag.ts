@@ -1,4 +1,4 @@
-import { ShuttleModelWrapper } from '../builtinModels/shuttle';
+import { ShuttleModelWrapper } from '../builtinModels/shuttleModel';
 import { access } from '../util/consts';
 /**
  * Tag

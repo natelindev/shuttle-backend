@@ -3,7 +3,7 @@
  */
 
 import mongoose, { Schema, model } from 'mongoose';
-import ShuttleModel, { ShuttleModelWrapper } from '../builtinModels/shuttle';
+import ShuttleModel, { ShuttleModelWrapper } from '../builtinModels/shuttleModel';
 import importHandler from '../util/importHandler';
 import getLogger from '../util/logger';
 
@@ -96,7 +96,17 @@ export const build = (
 
 const storedModels: { [key: string]: mongoose.Model<any> } = {};
 
-export default async (modelName: string): Promise<mongoose.Model<any> | null> => {
+const getACL = async (modelName: string): Promise<string | null> => {
+  let result: string | null;
+  const found = await ShuttleModel.findOne({ name: modelName });
+  if(found.access && )
+};
+
+/**
+ * getModel
+ * return a mongoose model
+ */
+const getModel = async (modelName: string): Promise<mongoose.Model<any> | null> => {
   let result: mongoose.Model<any> | null;
 
   if (storedModels[modelName]) {
@@ -125,3 +135,5 @@ export default async (modelName: string): Promise<mongoose.Model<any> | null> =>
   }
   return result;
 };
+
+export default { getACL, getModel };

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import importHandler from './importHandler';
 import getModelList from './modelScanner';
-import { ShuttleModelWrapper } from '../builtinModels/shuttle';
+import { ShuttleModelWrapper } from '../builtinModels/shuttleModel';
 import { TestDBManager } from '../database';
 
 const testDB = new TestDBManager();
