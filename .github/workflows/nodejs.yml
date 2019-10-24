@@ -24,3 +24,4 @@ jobs:
           yarn build
         env:
           CI: true
+          SECRET: SECRET_CI

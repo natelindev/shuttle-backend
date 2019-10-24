@@ -68,7 +68,7 @@ router.post(
       // Content of the Jwt
       const payload = {
         username: user.username,
-        expires: Date.now() + parseInt(process.env.JWT_EXPIRATION_MS, 10)
+        expires: Date.now() + parseInt(process.env.JWT_EXPIRATION_MS || '259200000', 10)
       };
 
       // assigns payload to req.user
