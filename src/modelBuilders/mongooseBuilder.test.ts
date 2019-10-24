@@ -10,8 +10,8 @@ import { TestDBManager } from '../database';
 import builder, { MongooseBuilder } from './mongooseBuilder';
 
 const testDB = new TestDBManager();
-beforeAll(() => testDB.start());
-afterAll(() => testDB.stop());
+beforeAll(async () => testDB.start());
+afterAll(async () => testDB.stop());
 
 describe('modelBuilder', () => {
   describe('parseProperty', () => {

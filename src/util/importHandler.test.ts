@@ -5,8 +5,8 @@ import { isShuttleModel } from '../builtinModels/shuttleModel';
 import { TestDBManager } from '../database';
 
 const testDB = new TestDBManager();
-beforeAll(() => testDB.start());
-afterAll(() => testDB.stop());
+beforeAll(async () => testDB.start());
+afterAll(async () => testDB.stop());
 
 describe('importHandler', () => {
   describe('importOne', () => {

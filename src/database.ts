@@ -34,7 +34,8 @@ export class TestDBManager {
     });
   }
 
-  stop(): Promise<boolean> {
+  async stop(): Promise<boolean> {
+    await mongoose.disconnect();
     return this.server.stop();
   }
 }

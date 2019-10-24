@@ -4,8 +4,8 @@ import app from '../app';
 import { TestDBManager } from '../database';
 
 const testDB = new TestDBManager();
-beforeAll(() => testDB.start());
-afterAll(() => testDB.stop());
+beforeAll(async () => testDB.start());
+afterAll(async () => testDB.stop());
 
 describe('POST /register', () => {
   it('should responds with register successful', done => {
