@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import importHandler from './importHandler';
 import getModelList from './modelScanner';
-import { ShuttleModelWrapper } from '../builtinModels/shuttleModel';
+import { isShuttleModel } from '../builtinModels/shuttleModel';
 import { TestDBManager } from '../database';
 
 const testDB = new TestDBManager();
@@ -20,7 +20,7 @@ describe('importHandler', () => {
       );
       // should all succeed
       importedList.forEach(imported => {
-        expect(imported instanceof ShuttleModelWrapper).toBe(true);
+        expect(isShuttleModel(imported)).toBe(true);
       });
     });
 

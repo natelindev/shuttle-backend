@@ -1,5 +1,5 @@
-import { ShuttleModelWrapper } from '../builtinModels/shuttleModel';
-import { access } from '../util/consts';
+import { ShuttleModelInterface } from '../builtinModels/shuttleModel';
+import { predefinedAccess } from '../builtinModels/access';
 /**
  * Note
  *
@@ -11,11 +11,16 @@ import { access } from '../util/consts';
  * @property {Number} likeCount (default:0)
  *
  */
-export default new ShuttleModelWrapper('Note', access.group, true, {
-  title: 'String!',
-  content: 'String!',
-  tags: ['Tag.Id'],
-  status: 'Status.Id',
-  images: ['Image.Id'],
-  likeCount: 'Number:0'
-});
+export default {
+  name: 'Note',
+  access: predefinedAccess.groupOnly,
+  hasOwner: true,
+  content: {
+    title: 'String!',
+    content: 'String!',
+    tags: ['Tag.Id'],
+    status: 'Status.Id',
+    images: ['Image.Id'],
+    likeCount: 'Number:0'
+  }
+} as ShuttleModelInterface;

@@ -1,5 +1,5 @@
-import { ShuttleModelWrapper } from '../builtinModels/shuttleModel';
-import { access } from '../util/consts';
+import { ShuttleModelInterface } from '../builtinModels/shuttleModel';
+import { predefinedAccess } from '../builtinModels/access';
 /**
  * Tag
  *
@@ -8,8 +8,14 @@ import { access } from '../util/consts';
  * @property {String} icon
  *
  */
-export default new ShuttleModelWrapper('tag', access.admin, true, {
-  parent: 'Tag.Id',
-  name: 'String!',
-  icon: 'String'
-});
+
+export default {
+  name: 'Tag',
+  access: predefinedAccess.adminOnly,
+  hasOwner: true,
+  content: {
+    parent: 'Tag.Id',
+    name: 'String!',
+    icon: 'String'
+  }
+} as ShuttleModelInterface;

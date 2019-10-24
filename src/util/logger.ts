@@ -57,7 +57,11 @@ class Logger {
   }
 
   static raw(message: any): void {
-    console.log(message);
+    if (typeof message === 'object') {
+      console.log(JSON.stringify(message));
+    } else {
+      console.log(message);
+    }
   }
 
   info(message: any): void {

@@ -49,7 +49,7 @@ export const userSchema = new Schema(
   { timestamps: true, collection: 'User' }
 );
 
-export interface UserInterface extends mongoose.Document {
+export interface UserInterface {
   username: string;
   nickname: string;
   description: string;
@@ -59,4 +59,5 @@ export interface UserInterface extends mongoose.Document {
   avatar: Schema.Types.ObjectId;
 }
 
-export default model<UserInterface>('User', userSchema);
+interface UserDbInterface extends UserInterface, mongoose.Document {}
+export default model<UserDbInterface>('User', userSchema);

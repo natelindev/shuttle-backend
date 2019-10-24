@@ -8,8 +8,8 @@ import getLogger from '../util/logger';
 import getModelList from '../util/modelScanner';
 import asyncHandler from '../util/errorHandler';
 import { roles } from '../builtinModels/user';
-import getModel from '../modelBuilders/mongoose';
-import { access } from '../util/consts';
+import builder from '../modelBuilders/mongooseBuilder';
+import { accessType } from '../builtinModels/access';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
@@ -20,7 +20,7 @@ const getRestRouters = async (): Promise<Router[]> => {
     const modelList = await getModelList();
     restRouters = await Promise.all(
       modelList.map(async modelName => {
-        const Model = await getModel(modelName);
+        const Model = await builder.getModel(modelName);
         let router = null;
         if (Model) {
           router = express.Router();
@@ -28,7 +28,7 @@ const getRestRouters = async (): Promise<Router[]> => {
           router
             .route(`/${modelName}`)
             .get(
-              authorize(access.public),
+              authorize(builder.acl[modelName], accessType.readOnly),
               asyncHandler(async (req: Request, res: Response) => {
                 const allModels = await Model.find({});
                 if (allModels) {
@@ -39,7 +39,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               })
             )
             .post(
-              authorize(access.everyone),
+              authorize(builder.acl[modelName], accessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 if (req.body.owner) {
                   // only admin can set different owner
@@ -55,7 +55,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               })
             )
             .put(
-              authorize(access.group),
+              authorize(builder.acl[modelName], accessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 const allModels = req.body as mongoose.Document[];
                 const bulkOperation = Model.collection.initializeUnorderedBulkOp();
@@ -70,7 +70,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               })
             )
             .delete(
-              authorize(access.group),
+              authorize(builder.acl[modelName], accessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 await Model.deleteMany({});
                 res.status(204).end();
@@ -87,7 +87,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               ])
             )
             .get(
-              authorize(access.public),
+              authorize(builder.acl[modelName], accessType.readOnly),
               asyncHandler(async (req: Request, res: Response) => {
                 const model = await Model.findOne({
                   _id: req.params[`${modelName}Id`]
@@ -100,7 +100,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               })
             )
             .put(
-              authorize(access.group),
+              authorize(builder.acl[modelName], accessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 if (req.body.owner) {
                   // only admin can set different owner
@@ -116,7 +116,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               })
             )
             .patch(
-              authorize(access.group),
+              authorize(builder.acl[modelName], accessType.readWrite),
               asyncHandler(async (req: Request, res: Response) => {
                 if (req.user.role !== roles.admin) {
                   // only admin can change ownership
@@ -132,7 +132,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               })
             )
             .delete(
-              authorize(access.group),
+              authorize(builder.acl[modelName], accessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 await Model.findByIdAndRemove(req.params[`${modelName}Id`]);
                 res.status(204).end();

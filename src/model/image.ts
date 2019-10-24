@@ -1,5 +1,5 @@
-import { ShuttleModelWrapper } from '../builtinModels/shuttleModel';
-import { access } from '../util/consts';
+import { ShuttleModelInterface } from '../builtinModels/shuttleModel';
+import { predefinedAccess } from '../builtinModels/access';
 
 /**
  * Image
@@ -10,9 +10,15 @@ import { access } from '../util/consts';
  * @property {Number} width
  *
  */
-export default new ShuttleModelWrapper('Image', access.group, true, {
-  path: 'String!',
-  filename: 'String!',
-  height: 'Number',
-  width: 'Number'
-});
+
+export default {
+  name: 'Image',
+  access: predefinedAccess.authedOnly,
+  hasOwner: true,
+  content: {
+    path: 'String!',
+    filename: 'String!',
+    height: 'Number',
+    width: 'Number'
+  }
+} as ShuttleModelInterface;

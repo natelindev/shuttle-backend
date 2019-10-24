@@ -1,5 +1,5 @@
-import { ShuttleModelWrapper } from '../builtinModels/shuttleModel';
-import { access } from '../util/consts';
+import { ShuttleModelInterface } from '../builtinModels/shuttleModel';
+import { predefinedAccess } from '../builtinModels/access';
 /**
  * Status
  *
@@ -8,8 +8,13 @@ import { access } from '../util/consts';
  * @property {String} icon
  *
  */
-export default new ShuttleModelWrapper('status', access.admin, true, {
-  name: 'String!',
-  description: 'String',
-  icon: 'String'
-});
+export default {
+  name: 'Status',
+  access: predefinedAccess.adminOnly,
+  hasOwner: true,
+  content: {
+    name: 'String!',
+    description: 'String',
+    icon: 'String'
+  }
+} as ShuttleModelInterface;

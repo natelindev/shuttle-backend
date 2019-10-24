@@ -25,10 +25,11 @@ export const userGroupSchema = new Schema(
   { timestamps: true, collection: 'UserGroup' }
 );
 
-export interface UserGroupsInterface extends mongoose.Document {
+export interface UserGroupsInterface {
   name: string;
   owner: UserInterface;
   members: UserInterface[];
 }
 
-export default model<UserGroupsInterface>('UserGroup', userGroupSchema);
+interface UserGroupsDbInterface extends UserGroupsInterface, mongoose.Document {}
+export default model<UserGroupsDbInterface>('UserGroup', userGroupSchema);

@@ -1,11 +1,12 @@
 import mongoose, { Schema } from 'mongoose';
-import { access } from '../util/consts';
+import { AccessInterface } from './access';
 
 /**
  * Dynamic Model
  *
  * @property {String} name
- * @property {String} description
+ * @property {AccessInterface} access
+ * @property {Boolean} hasOwner
  * @property {String} content schema string
  *
  */
@@ -17,8 +18,7 @@ const shuttleSchema = new Schema(
     },
     access: {
       required: true,
-      type: String,
-      enum: Object.values(access)
+      type: Schema.Types.Mixed
     },
     hasOwner: {
       required: true,
@@ -32,29 +32,52 @@ const shuttleSchema = new Schema(
   { timestamps: true, collection: 'shuttleModel' }
 );
 
-export interface ShuttleInterface extends mongoose.Document {
+/**
+ * ShuttleModelInterface
+ *
+ * @property {string} name (required)
+ * @property {AccessInterface} access
+ * @property {boolean} hasOwner
+ * @property {ShuttleModelSchema} content
+ *
+ */
+export interface ShuttleModelInterface {
   name: string;
-  access: access | string;
+  access: AccessInterface;
   hasOwner: boolean;
-  content: ShuttleSchema;
+  content: ShuttleModelSchema;
 }
 
-export interface ShuttleSchema {
-  [key: string]: any;
+/**
+ * Must maches owner have full access
+ */
+export interface ShuttleModelSchema {
+  [key: string]: ShuttleModelProperty;
 }
 
-export class ShuttleModelWrapper {
-  constructor(name: string, hasOwner: boolean, model: ShuttleSchema) {
-    this.name = name;
-    this.hasOwner = hasOwner;
-    this.model = model;
-  }
+export type ShuttleModelProperty = string | string[];
 
-  name: string;
+export const shuttleModelConsts = {
+  // (ref.)type(:default)(!)
+  regex: /^(?<ref>[a-zA-Z]+\.)?((?<type>[a-zA-Z]+))(:(?<default>.+))?(?<required>!)?$/,
+  supportedTypes: ['String', 'Number', 'Date', 'Boolean', 'Id']
+};
 
-  hasOwner: boolean;
-
-  model: ShuttleSchema;
+export function isShuttleModel(input: any): input is ShuttleModelInterface {
+  return (
+    input &&
+    input.name &&
+    input.access &&
+    Object.hasOwnProperty.call(input, 'hasOwner') &&
+    input.content &&
+    typeof input.name === 'string' &&
+    typeof input.access === 'object' &&
+    typeof input.hasOwner === 'boolean' &&
+    typeof input.content === 'object'
+  );
 }
 
-export default mongoose.model<ShuttleInterface>('ShuttleModel', shuttleSchema);
+export type supportedInterface = 'String' | 'Number' | 'Date' | 'Boolean' | 'ObjectId';
+
+interface ShuttleModelDbInterface extends ShuttleModelInterface, mongoose.Document {}
+export default mongoose.model<ShuttleModelDbInterface>('ShuttleModel', shuttleSchema);
