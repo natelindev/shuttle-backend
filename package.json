@@ -51,7 +51,7 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "test": "jest",
+    "test": "jest --forceExit",
     "build": "tsc",
     "lint": "eslint . & echo 'lint complete'",
     "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts",
