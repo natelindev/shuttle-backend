@@ -28,7 +28,7 @@ const getRestRouters = async (): Promise<Router[]> => {
           router
             .route(`/${modelName}`)
             .get(
-              authorize(builder.acl[modelName], accessType.readOnly),
+              authorize(modelName, accessType.readOnly),
               asyncHandler(async (req: Request, res: Response) => {
                 const allModels = await Model.find({});
                 if (allModels) {
@@ -39,7 +39,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               })
             )
             .post(
-              authorize(builder.acl[modelName], accessType.fullAccess),
+              authorize(modelName, accessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 if (req.body.owner) {
                   // only admin can set different owner
@@ -55,7 +55,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               })
             )
             .put(
-              authorize(builder.acl[modelName], accessType.fullAccess),
+              authorize(modelName, accessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 const allModels = req.body as mongoose.Document[];
                 const bulkOperation = Model.collection.initializeUnorderedBulkOp();
@@ -69,8 +69,11 @@ const getRestRouters = async (): Promise<Router[]> => {
                 res.status(204).end();
               })
             )
+            .patch((req: Request, res: Response) => {
+              res.status(405).end();
+            })
             .delete(
-              authorize(builder.acl[modelName], accessType.fullAccess),
+              authorize(modelName, accessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 await Model.deleteMany({});
                 res.status(204).end();
@@ -87,7 +90,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               ])
             )
             .get(
-              authorize(builder.acl[modelName], accessType.readOnly),
+              authorize(modelName, accessType.readOnly),
               asyncHandler(async (req: Request, res: Response) => {
                 const model = await Model.findOne({
                   _id: req.params[`${modelName}Id`]
@@ -100,7 +103,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               })
             )
             .put(
-              authorize(builder.acl[modelName], accessType.fullAccess),
+              authorize(modelName, accessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 if (req.body.owner) {
                   // only admin can set different owner
@@ -116,7 +119,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               })
             )
             .patch(
-              authorize(builder.acl[modelName], accessType.readWrite),
+              authorize(modelName, accessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 if (req.user.role !== roles.admin) {
                   // only admin can change ownership
@@ -132,7 +135,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               })
             )
             .delete(
-              authorize(builder.acl[modelName], accessType.fullAccess),
+              authorize(modelName, accessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 await Model.findByIdAndRemove(req.params[`${modelName}Id`]);
                 res.status(204).end();

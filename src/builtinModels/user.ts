@@ -2,7 +2,7 @@ import mongoose, { Schema, model } from 'mongoose';
 
 export enum roles {
   admin = 'admin',
-  groupOwner = 'groupOwner',
+  operator = 'operator',
   user = 'user'
 }
 

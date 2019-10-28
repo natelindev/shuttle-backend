@@ -13,7 +13,7 @@ import { predefinedAccess } from '../builtinModels/access';
  */
 export default {
   name: 'Note',
-  access: predefinedAccess.groupOnly,
+  access: predefinedAccess.operatorOnly,
   hasOwner: true,
   content: {
     title: 'String!',

@@ -3,52 +3,55 @@ import mongoose, { Schema, model } from 'mongoose';
 export enum accessType {
   noAccess = 'noAccess',
   readOnly = 'readOnly',
-  readWrite = 'readWrite',
   fullAccess = 'fullAccess'
 }
 
+/**
+ * Note: You should not give
+ * everyone, user fullAccess to most things
+ */
 export interface AccessInterface {
   everyone: accessType;
-  authedUser: accessType;
-  groupOwner: accessType;
+  user: accessType;
+  operator: accessType;
   self: accessType;
 }
 
 export const predefinedAccess = {
   /**
-   * Everyone can read, group owner and owner have full access
+   * Everyone can read, operator and owner have full access
    */
   public: {
     everyone: accessType.readOnly,
-    authedUser: accessType.readOnly,
-    groupOwner: accessType.fullAccess,
+    user: accessType.readOnly,
+    operator: accessType.fullAccess,
     self: accessType.fullAccess
   } as AccessInterface,
   /**
-   * Only authed user can read, group owner and owner have full access
+   * Only authed user can read, operator and owner have full access
    */
-  authedOnly: {
+  userOnly: {
     everyone: accessType.noAccess,
-    authedUser: accessType.readOnly,
-    groupOwner: accessType.fullAccess,
+    user: accessType.readOnly,
+    operator: accessType.fullAccess,
     self: accessType.fullAccess
   } as AccessInterface,
   /**
-   * Only group owner and owner have full access
+   * Operator and owner have full access
    */
-  groupOnly: {
+  operatorOnly: {
     everyone: accessType.noAccess,
-    authedUser: accessType.noAccess,
-    groupOwner: accessType.fullAccess,
+    user: accessType.noAccess,
+    operator: accessType.fullAccess,
     self: accessType.fullAccess
   } as AccessInterface,
   /**
-   * Group owner can read and only owner have full access
+   * Operator can read and only owner have full access
    */
-  groupLimited: {
+  operatorLimited: {
     everyone: accessType.noAccess,
-    authedUser: accessType.noAccess,
-    groupOwner: accessType.readOnly,
+    user: accessType.noAccess,
+    operator: accessType.readOnly,
     self: accessType.fullAccess
   } as AccessInterface,
   /**
@@ -56,8 +59,8 @@ export const predefinedAccess = {
    */
   personal: {
     everyone: accessType.noAccess,
-    authedUser: accessType.noAccess,
-    groupOwner: accessType.noAccess,
+    user: accessType.noAccess,
+    operator: accessType.noAccess,
     self: accessType.fullAccess
   } as AccessInterface,
   /**
@@ -65,8 +68,8 @@ export const predefinedAccess = {
    */
   adminOnly: {
     everyone: accessType.noAccess,
-    authedUser: accessType.noAccess,
-    groupOwner: accessType.noAccess,
+    user: accessType.noAccess,
+    operator: accessType.noAccess,
     self: accessType.noAccess
   } as AccessInterface
 };
@@ -78,12 +81,12 @@ const accessSchema = new Schema(
       type: String,
       enum: Object.values(accessType)
     },
-    authedUser: {
+    user: {
       required: true,
       type: String,
       enum: Object.values(accessType)
     },
-    groupOwner: {
+    operator: {
       required: true,
       type: String,
       enum: Object.values(accessType)

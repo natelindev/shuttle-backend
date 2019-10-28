@@ -13,7 +13,7 @@ import { predefinedAccess } from '../builtinModels/access';
 
 export default {
   name: 'Image',
-  access: predefinedAccess.authedOnly,
+  access: predefinedAccess.userOnly,
   hasOwner: true,
   content: {
     path: 'String!',

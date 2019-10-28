@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import { AccessInterface } from './access';
 
 /**
- * Dynamic Model
+ * Shuttle Model
  *
  * @property {String} name
  * @property {AccessInterface} access
@@ -63,6 +63,10 @@ export const shuttleModelConsts = {
   supportedTypes: ['String', 'Number', 'Date', 'Boolean', 'Id']
 };
 
+/**
+ * Currently will only check top level types
+ * @returns {boolean} whether the object is a shuttle model
+ */
 export function isShuttleModel(input: any): input is ShuttleModelInterface {
   return (
     input &&
