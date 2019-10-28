@@ -15,9 +15,9 @@ describe('POST /register', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /html/)
       .expect(200)
-      .end((err, res) => {
+      .end(err => {
         if (err) return done(err);
-        done();
+        return done();
       });
   });
 });
