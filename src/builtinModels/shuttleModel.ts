@@ -55,7 +55,7 @@ export interface ShuttleModelSchema {
   [key: string]: ShuttleModelProperty;
 }
 
-export type ShuttleModelProperty = string | string[];
+export type ShuttleModelProperty = string | string[] | ShuttleModelProperty[];
 
 export const shuttleModelConsts = {
   // (ref.)type(:default)(!)
